@@ -1,0 +1,113 @@
+{
+  "defaultPeriod": "1991-2020",
+  "periods": [
+    {
+      "id": "1991-2020",
+      "label": "1991-2020",
+      "kind": "historical",
+      "cog": "data/cogs/1991-2020.tif"
+    },
+    {
+      "id": "1961-1990",
+      "label": "1961-1990",
+      "kind": "historical",
+      "cog": "data/cogs/1961-1990.tif"
+    },
+    {
+      "id": "1931-1960",
+      "label": "1931-1960",
+      "kind": "historical",
+      "cog": "data/cogs/1931-1960.tif"
+    },
+    {
+      "id": "1901-1930",
+      "label": "1901-1930",
+      "kind": "historical",
+      "cog": "data/cogs/1901-1930.tif"
+    },
+    {
+      "id": "2041-2070-ssp119",
+      "label": "2041-2070 SSP1-1.9",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp119.tif"
+    },
+    {
+      "id": "2041-2070-ssp126",
+      "label": "2041-2070 SSP1-2.6",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp126.tif"
+    },
+    {
+      "id": "2041-2070-ssp245",
+      "label": "2041-2070 SSP2-4.5",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp245.tif"
+    },
+    {
+      "id": "2041-2070-ssp370",
+      "label": "2041-2070 SSP3-7.0",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp370.tif"
+    },
+    {
+      "id": "2041-2070-ssp434",
+      "label": "2041-2070 SSP4-3.4",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp434.tif"
+    },
+    {
+      "id": "2041-2070-ssp460",
+      "label": "2041-2070 SSP4-6.0",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp460.tif"
+    },
+    {
+      "id": "2041-2070-ssp585",
+      "label": "2041-2070 SSP5-8.5",
+      "kind": "scenario",
+      "cog": "data/cogs/2041-2070-ssp585.tif"
+    },
+    {
+      "id": "2071-2099-ssp119",
+      "label": "2071-2099 SSP1-1.9",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp119.tif"
+    },
+    {
+      "id": "2071-2099-ssp126",
+      "label": "2071-2099 SSP1-2.6",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp126.tif"
+    },
+    {
+      "id": "2071-2099-ssp245",
+      "label": "2071-2099 SSP2-4.5",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp245.tif"
+    },
+    {
+      "id": "2071-2099-ssp370",
+      "label": "2071-2099 SSP3-7.0",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp370.tif"
+    },
+    {
+      "id": "2071-2099-ssp434",
+      "label": "2071-2099 SSP4-3.4",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp434.tif"
+    },
+    {
+      "id": "2071-2099-ssp460",
+      "label": "2071-2099 SSP4-6.0",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp460.tif"
+    },
+    {
+      "id": "2071-2099-ssp585",
+      "label": "2071-2099 SSP5-8.5",
+      "kind": "scenario",
+      "cog": "data/cogs/2071-2099-ssp585.tif"
+    }
+  ]
+}

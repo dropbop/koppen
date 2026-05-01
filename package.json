@@ -1,0 +1,33 @@
+{
+  "name": "koppen-geiger-map",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "inventory-data": "node scripts/inventory-data.ts",
+    "prepare-cogs": "bash scripts/prepare-cogs.sh",
+    "build-zones": "node scripts/build-zones.ts",
+    "prepare-data": "pnpm inventory-data && pnpm prepare-cogs && pnpm build-zones",
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "ol": "^10.6.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^9.39.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^7.2.4"
+  }
+}

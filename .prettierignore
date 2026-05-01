@@ -1,0 +1,5 @@
+dist
+node_modules
+public/data
+koppen_geiger_tif
+koppen-geiger-app-spec.md
