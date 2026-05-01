@@ -60,12 +60,3 @@ export async function loadAppData(): Promise<{
 export function zoneList(zones: ZonesByValue): Zone[] {
   return Object.values(zones).sort((a, b) => a.value - b.value);
 }
-
-export function zoneByRgb(zones: ZonesByValue, rgb: Rgb): Zone | undefined {
-  return Object.values(zones).find(
-    (zone) =>
-      zone.rgb[0] === rgb[0] &&
-      zone.rgb[1] === rgb[1] &&
-      zone.rgb[2] === rgb[2],
-  );
-}

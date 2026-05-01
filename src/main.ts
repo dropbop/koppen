@@ -2,7 +2,7 @@ import 'ol/ol.css';
 import './styles.css';
 import { loadAppData, zoneList } from '@/data/zones';
 import { setState, subscribe } from '@/state';
-import { mountMap } from '@/map/map';
+import { mountMap, whenSourceReady } from '@/map/map';
 import { mountBasemapToggle } from '@/ui/basemap-toggle';
 import { mountPopup } from '@/ui/popup';
 import { mountSidebar } from '@/ui/sidebar';
@@ -40,10 +40,14 @@ async function main(): Promise<void> {
         'dark-mode',
         state.theme === 'dark',
       );
+      loadingTarget.classList.toggle('is-hidden', !state.loading);
     });
 
+    const initialSource = controller.climateLayer.getSource();
+    if (initialSource) {
+      await whenSourceReady(initialSource).catch(() => undefined);
+    }
     setState({ loading: false });
-    loadingTarget.classList.add('is-hidden');
   } catch (error) {
     console.error(error);
     loadingTarget.innerHTML = `

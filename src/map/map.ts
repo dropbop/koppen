@@ -1,7 +1,9 @@
 import Map from 'ol/Map';
 import View from 'ol/View';
+import { unByKey } from 'ol/Observable';
 import { defaults as defaultControls } from 'ol/control/defaults';
 import { fromLonLat } from 'ol/proj';
+import type Source from 'ol/source/Source';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
 import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
@@ -15,6 +17,28 @@ import {
   setClimateLayerStyle,
 } from './climate-layer';
 import { readClickedZone } from './click-query';
+
+export function whenSourceReady(source: Source): Promise<void> {
+  const initial = source.getState();
+  if (initial === 'ready') {
+    return Promise.resolve();
+  }
+  if (initial === 'error') {
+    return Promise.reject(new Error('GeoTIFF source failed to load'));
+  }
+  return new Promise<void>((resolve, reject) => {
+    const key = source.on('change', () => {
+      const next = source.getState();
+      if (next === 'ready') {
+        unByKey(key);
+        resolve();
+      } else if (next === 'error') {
+        unByKey(key);
+        reject(new Error('GeoTIFF source failed to load'));
+      }
+    });
+  });
+}
 
 export type MapController = {
   map: Map;
@@ -113,10 +137,20 @@ export function mountMap(
     }
 
     if (state.period && state.period !== renderedPeriod) {
-      climateLayer.setSource(
-        createGeoTiffSource(cogForPeriod(manifest, state.period)),
+      const targetPeriod = state.period;
+      renderedPeriod = targetPeriod;
+      const nextSource = createGeoTiffSource(
+        cogForPeriod(manifest, targetPeriod),
       );
-      renderedPeriod = state.period;
+      climateLayer.setSource(nextSource);
+      setState({ loading: true });
+      whenSourceReady(nextSource)
+        .catch(() => undefined)
+        .finally(() => {
+          if (renderedPeriod === targetPeriod) {
+            setState({ loading: false });
+          }
+        });
     }
   });
 

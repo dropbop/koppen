@@ -62,11 +62,7 @@ Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zen
 
 ## Adding Periods Or Scenarios
 
-Add or expose another TIFF by editing `scripts/prepare-cogs.sh` and `scripts/build-zones.ts`:
-
-1. Add a source TIFF to the `PERIODS` map in `scripts/prepare-cogs.sh`.
-2. Add a matching period entry in the manifest block in `scripts/build-zones.ts`.
-3. Run `pnpm prepare-data`.
+Period definitions live in a single file: `scripts/periods.ts`. Add an entry there with the desired `id`, `label`, `kind`, and source path under `koppen_geiger_tif/`, then run `pnpm prepare-data` to regenerate the COG and manifest.
 
 Use the existing `0p1` source files unless there is a deliberate reason to ship a heavier layer.
 

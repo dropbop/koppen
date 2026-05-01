@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "inventory-data": "node scripts/inventory-data.ts",
-    "prepare-cogs": "bash scripts/prepare-cogs.sh",
+    "prepare-cogs": "node scripts/prepare-cogs.ts",
     "build-zones": "node scripts/build-zones.ts",
     "prepare-data": "pnpm inventory-data && pnpm prepare-cogs && pnpm build-zones",
     "dev": "vite --host 0.0.0.0",
