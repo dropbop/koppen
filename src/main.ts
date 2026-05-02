@@ -47,10 +47,7 @@ async function main(): Promise<void> {
     mountPopup(popupTarget, controller.map, zones);
     let loadingTimer: number | undefined;
     subscribe((state) => {
-      document.documentElement.classList.toggle(
-        'dark-mode',
-        state.theme === 'dark',
-      );
+      document.body.classList.toggle('sidebar-open', state.sidebarOpen);
       persistPreferences(state);
 
       if (state.loading) {

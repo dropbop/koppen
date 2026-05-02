@@ -1,5 +1,4 @@
 import { getState, setState, subscribe } from '@/state';
-import type { Theme } from '@/state';
 import type { Manifest, Zone, ZonesByValue } from '@/data/zones';
 import { zoneList } from '@/data/zones';
 import { escapeHtml } from '@/utils/html';
@@ -94,7 +93,6 @@ function render(
   visibleZones: Set<number>,
   period: string,
   opacity: number,
-  theme: Theme,
   sidebarOpen: boolean,
 ): void {
   target.className = `sidebar ${sidebarOpen ? 'is-open' : 'is-collapsed'}`;
@@ -115,7 +113,7 @@ function render(
         <section class="zone-group">
           <label class="group-row">
             <input type="checkbox" data-group="${escapeHtml(groupCode)}" aria-controls="${groupId}" aria-label="Toggle ${escapeHtml(first.group)} climates" ${checked} />
-            <span>${escapeHtml(groupCode)} - ${escapeHtml(first.group)}</span>
+            <span>${escapeHtml(groupCode)} — ${escapeHtml(first.group)}</span>
           </label>
           <div class="zone-group-list" id="${groupId}">${rows}</div>
         </section>
@@ -127,14 +125,15 @@ function render(
     <div class="sidebar-panel">
       <header class="sidebar-header">
         <div class="sidebar-title-row">
-          <h1>Köppen-Geiger Climate Map</h1>
+          <div>
+            <p class="eyebrow">Köppen-Geiger · Beck V3</p>
+            <h1>An Atlas of Climate</h1>
+          </div>
           <div class="sidebar-actions">
-            <button type="button" data-action="toggle-theme" aria-label="Toggle dark mode" aria-pressed="${theme === 'dark'}">${theme === 'dark' ? 'Light' : 'Dark'}</button>
             <button class="sidebar-toggle" type="button" data-action="toggle-sidebar" aria-controls="sidebar-controls" aria-expanded="${sidebarOpen}">${sidebarOpen ? 'Hide' : 'Show'}</button>
           </div>
         </div>
-        <p>Global historical and projected climate zones from Beck et al. V3.</p>
-        <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">Data source</a>
+        <p>Historical and projected climate zones at 1 km resolution, from 1901 through 2099.</p>
       </header>
 
       <div class="sidebar-content" id="sidebar-controls">
@@ -143,15 +142,15 @@ function render(
           <select id="period-select">
             ${renderPeriodOptions(manifest, period)}
           </select>
-          <p class="scenario-help">SSP labels describe future emissions pathways. SSP1 is more sustainable, SSP5 is fossil-fueled growth, and the number is approximate 2100 radiative forcing in W/m2.</p>
+          <p class="scenario-help">SSP labels describe future emissions pathways. SSP1 is sustainable, SSP5 is fossil-fueled growth; the trailing number is the approximate 2100 radiative forcing in W/m².</p>
         </section>
 
         <section class="control-section">
           <div class="section-heading">
             <span>Climate Classes</span>
             <div>
-              <button type="button" data-action="show-all">Show all</button>
-              <button type="button" data-action="show-none">Show none</button>
+              <button type="button" data-action="show-all">All</button>
+              <button type="button" data-action="show-none">None</button>
             </div>
           </div>
           <div class="zone-list">${groups}</div>
@@ -162,12 +161,15 @@ function render(
           <input id="opacity-slider" type="range" min="0.2" max="1" step="0.05" value="${opacity}" />
         </section>
 
-        <footer>
-          <p>Data source: <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">gloh2o.org/koppen</a>.</p>
-          <p>Place names from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> via Nominatim.</p>
-          <p>License: CC BY 4.0. Freely use, adapt, and share these maps with attribution to Beck et al. (2023).</p>
-          <p>Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles. High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections, Scientific Data 10, 724, doi:10.1038/s41597-023-02549-6 (2023).</p>
-        </footer>
+        <details class="sidebar-citation">
+          <summary>About &amp; citation</summary>
+          <div class="citation-body">
+            <p><strong>Project code:</strong> <a href="https://github.com/dropbop/koppen/blob/main/LICENSE" target="_blank" rel="noreferrer">MIT</a> · <a href="https://github.com/dropbop/koppen" target="_blank" rel="noreferrer">github.com/dropbop/koppen</a></p>
+            <p><strong>Map data:</strong> Beck et al. (2023), <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">gloh2o.org/koppen</a>, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>. Free to use, adapt, and share with attribution to the authors.</p>
+            <p><strong>Place names:</strong> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors, <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noreferrer">ODbL</a>, via Nominatim.</p>
+            <p class="citation-paper">Beck, H. E., T. R. McVicar, N. Vergopolan, A. Berg, N. J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A. I. J. M. van Dijk, D. G. Miralles. <em>High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections.</em> Scientific Data 10, 724 (2023). doi:10.1038/s41597-023-02549-6.</p>
+          </div>
+        </details>
       </div>
     </div>
   `;
@@ -256,10 +258,6 @@ export function mountSidebar(
       setState({ visibleZones: new Set() });
       return;
     }
-    if (button.dataset.action === 'toggle-theme') {
-      setState({ theme: getState().theme === 'dark' ? 'light' : 'dark' });
-      return;
-    }
     if (button.dataset.action === 'toggle-sidebar') {
       setState({ sidebarOpen: !getState().sidebarOpen });
     }
@@ -268,7 +266,6 @@ export function mountSidebar(
   let lastRender: {
     period: string;
     visibleZones: Set<number>;
-    theme: Theme;
     sidebarOpen: boolean;
   } | null = null;
 
@@ -277,7 +274,6 @@ export function mountSidebar(
       !lastRender ||
       lastRender.period !== state.period ||
       lastRender.visibleZones !== state.visibleZones ||
-      lastRender.theme !== state.theme ||
       lastRender.sidebarOpen !== state.sidebarOpen;
 
     if (needsFullRender) {
@@ -288,13 +284,11 @@ export function mountSidebar(
         state.visibleZones,
         state.period,
         state.opacity,
-        state.theme,
         state.sidebarOpen,
       );
       lastRender = {
         period: state.period,
         visibleZones: state.visibleZones,
-        theme: state.theme,
         sidebarOpen: state.sidebarOpen,
       };
     } else {
