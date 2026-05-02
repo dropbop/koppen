@@ -27,35 +27,34 @@ export function loadPreferences(
   zones: Zone[],
 ): Partial<AppState> {
   const stored = readStoredPreferences();
+  const preferences: Partial<AppState> = {};
   const validPeriods = new Set(manifest.periods.map((period) => period.id));
   const validZones = new Set(zones.map((zone) => zone.value));
   const visibleZones = stored.visibleZones?.filter((zone) =>
     validZones.has(zone),
   );
 
-  return {
-    period:
-      stored.period && validPeriods.has(stored.period)
-        ? stored.period
-        : undefined,
-    basemap:
-      stored.basemap === 'plain' || stored.basemap === 'satellite'
-        ? stored.basemap
-        : undefined,
-    visibleZones: Array.isArray(stored.visibleZones)
-      ? new Set(visibleZones)
-      : undefined,
-    opacity:
-      typeof stored.opacity === 'number' &&
-      stored.opacity >= 0.2 &&
-      stored.opacity <= 1
-        ? stored.opacity
-        : undefined,
-    theme:
-      stored.theme === 'light' || stored.theme === 'dark'
-        ? stored.theme
-        : undefined,
-  };
+  if (stored.period && validPeriods.has(stored.period)) {
+    preferences.period = stored.period;
+  }
+  if (stored.basemap === 'plain' || stored.basemap === 'satellite') {
+    preferences.basemap = stored.basemap;
+  }
+  if (Array.isArray(stored.visibleZones)) {
+    preferences.visibleZones = new Set(visibleZones);
+  }
+  if (
+    typeof stored.opacity === 'number' &&
+    stored.opacity >= 0.2 &&
+    stored.opacity <= 1
+  ) {
+    preferences.opacity = stored.opacity;
+  }
+  if (stored.theme === 'light' || stored.theme === 'dark') {
+    preferences.theme = stored.theme;
+  }
+
+  return preferences;
 }
 
 export function persistPreferences(state: Readonly<AppState>): void {
