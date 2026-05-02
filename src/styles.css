@@ -463,18 +463,31 @@ input[type='range'] {
   right: 0.5rem;
   top: 0.5rem;
   z-index: 10;
-  display: flex;
   height: 26px;
   width: 26px;
-  align-items: center;
-  justify-content: center;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.22);
   color: #fff;
-  font-size: 1.05rem;
-  line-height: 1;
   border: 0;
   cursor: pointer;
+  padding: 0;
+}
+
+.popup-close::before,
+.popup-close::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.popup-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .popup-close:hover {

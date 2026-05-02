@@ -29,7 +29,7 @@ function popupHtml(zone: Zone, popup: PopupState): string {
       : `<p class="popup-place"><strong>Approx. place:</strong> ${escapeHtml(placeText(popup))}</p>`;
   return `
     <article class="popup-card">
-      <button class="popup-close" type="button" aria-label="Close popup">&times;</button>
+      <button class="popup-close" type="button" aria-label="Close popup"></button>
       <header class="popup-header" style="background-color: rgb(${r} ${g} ${b})">
         <span>${escapeHtml(zone.code)}</span>
       </header>
