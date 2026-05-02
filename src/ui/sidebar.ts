@@ -68,6 +68,23 @@ function renderPeriodOptions(manifest: Manifest, period: string): string {
   `;
 }
 
+function opacityLabel(opacity: number): string {
+  return `Layer opacity ${Math.round(opacity * 100)}%`;
+}
+
+function updateOpacity(target: HTMLElement, opacity: number): void {
+  const label = target.querySelector<HTMLLabelElement>(
+    'label[for="opacity-slider"]',
+  );
+  if (label) {
+    label.textContent = opacityLabel(opacity);
+  }
+  const slider = target.querySelector<HTMLInputElement>('#opacity-slider');
+  if (slider && Number(slider.value) !== opacity) {
+    slider.value = String(opacity);
+  }
+}
+
 function render(
   target: HTMLElement,
   manifest: Manifest,
@@ -131,7 +148,7 @@ function render(
       </section>
 
       <section class="control-section">
-        <label class="section-label" for="opacity-slider">Layer opacity ${Math.round(opacity * 100)}%</label>
+        <label class="section-label" for="opacity-slider">${opacityLabel(opacity)}</label>
         <input id="opacity-slider" type="range" min="0.2" max="1" step="0.05" value="${opacity}" />
       </section>
 
@@ -162,16 +179,18 @@ export function mountSidebar(
   const zones = zoneList(zonesByValue);
   target.className = 'sidebar';
 
+  target.addEventListener('input', (event) => {
+    const input = event.target as HTMLInputElement;
+    if (input.id === 'opacity-slider') {
+      setState({ opacity: Number(input.value) });
+    }
+  });
+
   target.addEventListener('change', (event) => {
     const input = event.target as HTMLInputElement;
 
     if (input.id === 'period-select') {
       setState({ period: input.value, popup: null });
-      return;
-    }
-
-    if (input.id === 'opacity-slider') {
-      setState({ opacity: Number(input.value) });
       return;
     }
 
@@ -233,15 +252,36 @@ export function mountSidebar(
     }
   });
 
+  let lastRender: {
+    period: string;
+    visibleZones: Set<number>;
+    theme: Theme;
+  } | null = null;
+
   subscribe((state) => {
-    render(
-      target,
-      manifest,
-      zones,
-      state.visibleZones,
-      state.period,
-      state.opacity,
-      state.theme,
-    );
+    const needsFullRender =
+      !lastRender ||
+      lastRender.period !== state.period ||
+      lastRender.visibleZones !== state.visibleZones ||
+      lastRender.theme !== state.theme;
+
+    if (needsFullRender) {
+      render(
+        target,
+        manifest,
+        zones,
+        state.visibleZones,
+        state.period,
+        state.opacity,
+        state.theme,
+      );
+      lastRender = {
+        period: state.period,
+        visibleZones: state.visibleZones,
+        theme: state.theme,
+      };
+    } else {
+      updateOpacity(target, state.opacity);
+    }
   });
 }

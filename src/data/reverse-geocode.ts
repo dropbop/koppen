@@ -16,6 +16,23 @@ type NominatimResponse = {
 };
 
 const cache = new Map<string, string | null>();
+const MIN_REQUEST_GAP_MS = 1100;
+
+let queue: Promise<unknown> = Promise.resolve();
+let lastDispatch = 0;
+
+function schedule<T>(work: () => Promise<T>): Promise<T> {
+  const result = queue.then(async () => {
+    const wait = Math.max(0, lastDispatch + MIN_REQUEST_GAP_MS - Date.now());
+    if (wait > 0) {
+      await new Promise<void>((resolve) => setTimeout(resolve, wait));
+    }
+    lastDispatch = Date.now();
+    return work();
+  });
+  queue = result.catch(() => undefined);
+  return result;
+}
 
 function cacheKey(lon: number, lat: number): string {
   return `${lat.toFixed(2)},${lon.toFixed(2)}`;
@@ -61,22 +78,29 @@ export async function reverseGeocode(
     return cache.get(key) ?? null;
   }
 
-  const url = new URL('https://nominatim.openstreetmap.org/reverse');
-  url.searchParams.set('format', 'jsonv2');
-  url.searchParams.set('lat', String(lat));
-  url.searchParams.set('lon', String(lon));
-  url.searchParams.set('zoom', '10');
-  url.searchParams.set('addressdetails', '1');
-  url.searchParams.set('accept-language', 'en');
+  return schedule(async () => {
+    const cached = cache.get(key);
+    if (cached !== undefined) {
+      return cached;
+    }
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Nominatim lookup failed: ${response.status}`);
-  }
+    const url = new URL('https://nominatim.openstreetmap.org/reverse');
+    url.searchParams.set('format', 'jsonv2');
+    url.searchParams.set('lat', String(lat));
+    url.searchParams.set('lon', String(lon));
+    url.searchParams.set('zoom', '10');
+    url.searchParams.set('addressdetails', '1');
+    url.searchParams.set('accept-language', 'en');
 
-  const placeName = compactPlaceName(
-    (await response.json()) as NominatimResponse,
-  );
-  cache.set(key, placeName);
-  return placeName;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Nominatim lookup failed: ${response.status}`);
+    }
+
+    const placeName = compactPlaceName(
+      (await response.json()) as NominatimResponse,
+    );
+    cache.set(key, placeName);
+    return placeName;
+  });
 }

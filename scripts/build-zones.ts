@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { DEFAULT_PERIOD, PERIODS } from './periods.ts';
 
 type Rgb = [number, number, number];
 
@@ -61,30 +62,9 @@ const zones = Object.fromEntries(
   ]),
 );
 
-const periodEntries = [
-  ['1991-2020', '1991-2020', 'historical'],
-  ['1961-1990', '1961-1990', 'historical'],
-  ['1931-1960', '1931-1960', 'historical'],
-  ['1901-1930', '1901-1930', 'historical'],
-  ['2041-2070-ssp119', '2041-2070 SSP1-1.9', 'scenario'],
-  ['2041-2070-ssp126', '2041-2070 SSP1-2.6', 'scenario'],
-  ['2041-2070-ssp245', '2041-2070 SSP2-4.5', 'scenario'],
-  ['2041-2070-ssp370', '2041-2070 SSP3-7.0', 'scenario'],
-  ['2041-2070-ssp434', '2041-2070 SSP4-3.4', 'scenario'],
-  ['2041-2070-ssp460', '2041-2070 SSP4-6.0', 'scenario'],
-  ['2041-2070-ssp585', '2041-2070 SSP5-8.5', 'scenario'],
-  ['2071-2099-ssp119', '2071-2099 SSP1-1.9', 'scenario'],
-  ['2071-2099-ssp126', '2071-2099 SSP1-2.6', 'scenario'],
-  ['2071-2099-ssp245', '2071-2099 SSP2-4.5', 'scenario'],
-  ['2071-2099-ssp370', '2071-2099 SSP3-7.0', 'scenario'],
-  ['2071-2099-ssp434', '2071-2099 SSP4-3.4', 'scenario'],
-  ['2071-2099-ssp460', '2071-2099 SSP4-6.0', 'scenario'],
-  ['2071-2099-ssp585', '2071-2099 SSP5-8.5', 'scenario'],
-] as const;
-
 const manifest = {
-  defaultPeriod: '1991-2020',
-  periods: periodEntries.map(([id, label, kind]) => ({
+  defaultPeriod: DEFAULT_PERIOD,
+  periods: PERIODS.map(({ id, label, kind }) => ({
     id,
     label,
     kind,
