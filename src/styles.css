@@ -628,6 +628,7 @@ input[type='range'] {
   .sidebar {
     bottom: 0;
     top: auto;
+    height: calc(100dvh - 1rem);
     max-height: calc(100dvh - 1rem);
     width: 100%;
     max-width: none;
@@ -641,12 +642,16 @@ input[type='range'] {
   }
 
   .sidebar-panel {
+    height: 100%;
     min-height: 0;
     padding: 1rem 1.1rem 1.25rem;
   }
 
   .sidebar-content {
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .sidebar-toggle {
@@ -654,6 +659,7 @@ input[type='range'] {
   }
 
   .sidebar.is-collapsed {
+    height: 4.25rem;
     max-height: 4.25rem;
   }
 
