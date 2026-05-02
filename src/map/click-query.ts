@@ -11,7 +11,12 @@ export function readClickedZone(
   event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>,
   layer: WebGLTileLayer,
   zones: ZonesByValue,
-): { lon: number; lat: number; classValue: number } | null {
+): {
+  lon: number;
+  lat: number;
+  coordinate: [number, number];
+  classValue: number;
+} | null {
   const data = layer.getData(event.pixel);
   if (!data) {
     return null;
@@ -24,5 +29,10 @@ export function readClickedZone(
   }
 
   const [lon, lat] = toLonLat(event.coordinate);
-  return { lon: normalizeLongitude(lon), lat, classValue };
+  return {
+    lon: normalizeLongitude(lon),
+    lat,
+    coordinate: [event.coordinate[0], event.coordinate[1]],
+    classValue,
+  };
 }

@@ -1,5 +1,4 @@
 import Overlay from 'ol/Overlay';
-import { fromLonLat } from 'ol/proj';
 import type Map from 'ol/Map';
 import { setState, subscribe } from '@/state';
 import type { PopupState } from '@/state';
@@ -100,6 +99,6 @@ export function mountPopup(
     }
 
     target.innerHTML = popupHtml(zone, state.popup);
-    overlay.setPosition(fromLonLat([state.popup.lon, state.popup.lat]));
+    overlay.setPosition(state.popup.coordinate);
   });
 }

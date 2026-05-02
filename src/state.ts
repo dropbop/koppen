@@ -4,6 +4,7 @@ export type Theme = 'light' | 'dark';
 export type PopupState = {
   lon: number;
   lat: number;
+  coordinate: [number, number];
   classValue: number;
   placeName?: string;
   placeStatus?: 'loading' | 'ready' | 'error';
