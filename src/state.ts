@@ -1,3 +1,5 @@
+import { DEFAULT_OPACITY } from '@/config';
+
 export type Basemap = 'plain' | 'satellite';
 export type Theme = 'light' | 'dark';
 
@@ -18,6 +20,7 @@ export type AppState = {
   loading: boolean;
   opacity: number;
   theme: Theme;
+  sidebarOpen: boolean;
 };
 
 const state: AppState = {
@@ -26,8 +29,9 @@ const state: AppState = {
   visibleZones: new Set(),
   popup: null,
   loading: true,
-  opacity: 0.5,
+  opacity: DEFAULT_OPACITY,
   theme: 'light',
+  sidebarOpen: true,
 };
 
 const subscribers = new Set<(nextState: Readonly<AppState>) => void>();

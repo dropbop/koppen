@@ -68,7 +68,7 @@ export function mountMap(
     cogForPeriod(manifest, manifest.defaultPeriod),
     zones,
     initialVisibleZones,
-    0.5,
+    getState().opacity,
   );
   let renderedPeriod = manifest.defaultPeriod;
   let renderedVisibleZones = initialVisibleZones;

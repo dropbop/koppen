@@ -9,7 +9,7 @@ export type BasemapLayers = {
 export function createBasemapLayers(): BasemapLayers {
   const plain = new TileLayer({
     source: new XYZ({
-      url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      url: 'https://{a-d}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attributions: '&copy; OpenStreetMap contributors &copy; CARTO',
       crossOrigin: 'anonymous',
       maxZoom: 20,

@@ -3,6 +3,7 @@ import type Map from 'ol/Map';
 import { setState, subscribe } from '@/state';
 import type { PopupState } from '@/state';
 import type { Zone, ZonesByValue } from '@/data/zones';
+import { escapeHtml } from '@/utils/html';
 
 function formatCoordinate(
   value: number,
@@ -13,19 +14,7 @@ function formatCoordinate(
   return `${Math.abs(value).toFixed(2)} ${suffix}`;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
 function placeText(popup: PopupState): string {
-  if (popup.placeStatus === 'loading') {
-    return 'Looking up nearby place...';
-  }
   if (popup.placeStatus === 'error') {
     return 'Place lookup unavailable';
   }
@@ -34,18 +23,22 @@ function placeText(popup: PopupState): string {
 
 function popupHtml(zone: Zone, popup: PopupState): string {
   const [r, g, b] = zone.rgb;
+  const placeRow =
+    popup.placeStatus === 'loading'
+      ? ''
+      : `<p class="popup-place"><strong>Approx. place:</strong> ${escapeHtml(placeText(popup))}</p>`;
   return `
     <article class="popup-card">
       <button class="popup-close" type="button" aria-label="Close popup">&times;</button>
       <header class="popup-header" style="background-color: rgb(${r} ${g} ${b})">
-        <span>${zone.code}</span>
+        <span>${escapeHtml(zone.code)}</span>
       </header>
       <div class="popup-body">
-        <h2>${zone.name}</h2>
-        <p class="popup-group">${zone.group}, ${zone.groupDescription}</p>
-        <p>${zone.description}</p>
-        <p><strong>Found in:</strong> ${zone.examples}</p>
-        <p class="popup-place"><strong>Approx. place:</strong> ${escapeHtml(placeText(popup))}</p>
+        <h2>${escapeHtml(zone.name)}</h2>
+        <p class="popup-group">${escapeHtml(zone.group)}, ${escapeHtml(zone.groupDescription)}</p>
+        <p>${escapeHtml(zone.description)}</p>
+        <p><strong>Found in:</strong> ${escapeHtml(zone.examples)}</p>
+        ${placeRow}
         <p class="popup-coordinates">${formatCoordinate(popup.lat, 'N', 'S')}, ${formatCoordinate(popup.lon, 'E', 'W')}</p>
       </div>
     </article>
@@ -62,6 +55,11 @@ export function mountPopup(
     positioning: 'bottom-center',
     stopEvent: true,
     offset: [0, -14],
+    autoPan: {
+      animation: {
+        duration: 200,
+      },
+    },
   });
   map.addOverlay(overlay);
 

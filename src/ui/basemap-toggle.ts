@@ -4,8 +4,8 @@ import { setState, subscribe } from '@/state';
 export function mountBasemapToggle(target: HTMLElement): void {
   target.className = 'basemap-toggle';
   target.innerHTML = `
-    <button type="button" data-basemap="plain">Map</button>
-    <button type="button" data-basemap="satellite">Satellite</button>
+    <button type="button" data-basemap="plain" aria-pressed="false">Map</button>
+    <button type="button" data-basemap="satellite" aria-pressed="false">Satellite</button>
   `;
 
   target.addEventListener('click', (event) => {
@@ -25,6 +25,10 @@ export function mountBasemapToggle(target: HTMLElement): void {
       button.classList.toggle(
         'is-active',
         button.dataset.basemap === state.basemap,
+      );
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.basemap === state.basemap),
       );
     }
   });

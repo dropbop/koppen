@@ -2,6 +2,7 @@ import { getState, setState, subscribe } from '@/state';
 import type { Theme } from '@/state';
 import type { Manifest, Zone, ZonesByValue } from '@/data/zones';
 import { zoneList } from '@/data/zones';
+import { escapeHtml } from '@/utils/html';
 
 const groupOrder = ['A', 'B', 'C', 'D', 'E'];
 
@@ -32,12 +33,13 @@ function isGroupIndeterminate(
 function renderZoneRow(zone: Zone, visibleZones: Set<number>): string {
   const [r, g, b] = zone.rgb;
   const checked = visibleZones.has(zone.value) ? 'checked' : '';
+  const label = `${zone.code} ${zone.name}`;
   return `
     <label class="zone-row">
-      <input type="checkbox" data-zone="${zone.value}" ${checked} />
+      <input type="checkbox" data-zone="${zone.value}" aria-label="${escapeHtml(label)}" ${checked} />
       <span class="zone-swatch" style="background-color: rgb(${r} ${g} ${b})"></span>
-      <span class="zone-code">${zone.code}</span>
-      <span class="zone-name">${zone.name}</span>
+      <span class="zone-code">${escapeHtml(zone.code)}</span>
+      <span class="zone-name">${escapeHtml(zone.name)}</span>
     </label>
   `;
 }
@@ -54,7 +56,7 @@ function renderPeriodOptions(manifest: Manifest, period: string): string {
     periods
       .map(
         (manifestPeriod) =>
-          `<option value="${manifestPeriod.id}" ${manifestPeriod.id === period ? 'selected' : ''}>${manifestPeriod.label}</option>`,
+          `<option value="${escapeHtml(manifestPeriod.id)}" ${manifestPeriod.id === period ? 'selected' : ''}>${escapeHtml(manifestPeriod.label)}</option>`,
       )
       .join('');
 
@@ -93,7 +95,9 @@ function render(
   period: string,
   opacity: number,
   theme: Theme,
+  sidebarOpen: boolean,
 ): void {
+  target.className = `sidebar ${sidebarOpen ? 'is-open' : 'is-collapsed'}`;
   const grouped = groupZones(zones);
   const groups = groupOrder
     .map((groupCode) => {
@@ -106,13 +110,14 @@ function render(
       const rows = group
         .map((zone) => renderZoneRow(zone, visibleZones))
         .join('');
+      const groupId = `zone-group-${groupCode}`;
       return `
         <section class="zone-group">
           <label class="group-row">
-            <input type="checkbox" data-group="${groupCode}" ${checked} />
-            <span>${groupCode} - ${first.group}</span>
+            <input type="checkbox" data-group="${escapeHtml(groupCode)}" aria-controls="${groupId}" aria-label="Toggle ${escapeHtml(first.group)} climates" ${checked} />
+            <span>${escapeHtml(groupCode)} - ${escapeHtml(first.group)}</span>
           </label>
-          <div class="zone-group-list">${rows}</div>
+          <div class="zone-group-list" id="${groupId}">${rows}</div>
         </section>
       `;
     })
@@ -123,41 +128,47 @@ function render(
       <header class="sidebar-header">
         <div class="sidebar-title-row">
           <h1>Köppen-Geiger Climate Map</h1>
-          <button type="button" data-action="toggle-theme" aria-label="Toggle dark mode">${theme === 'dark' ? 'Light' : 'Dark'}</button>
+          <div class="sidebar-actions">
+            <button type="button" data-action="toggle-theme" aria-label="Toggle dark mode" aria-pressed="${theme === 'dark'}">${theme === 'dark' ? 'Light' : 'Dark'}</button>
+            <button class="sidebar-toggle" type="button" data-action="toggle-sidebar" aria-controls="sidebar-controls" aria-expanded="${sidebarOpen}">${sidebarOpen ? 'Hide' : 'Show'}</button>
+          </div>
         </div>
         <p>Global historical and projected climate zones from Beck et al. V3.</p>
         <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">Data source</a>
       </header>
 
-      <section class="control-section">
-        <label class="section-label" for="period-select">Period</label>
-        <select id="period-select">
-          ${renderPeriodOptions(manifest, period)}
-        </select>
-      </section>
+      <div class="sidebar-content" id="sidebar-controls">
+        <section class="control-section">
+          <label class="section-label" for="period-select">Period</label>
+          <select id="period-select">
+            ${renderPeriodOptions(manifest, period)}
+          </select>
+          <p class="scenario-help">SSP labels describe future emissions pathways. SSP1 is more sustainable, SSP5 is fossil-fueled growth, and the number is approximate 2100 radiative forcing in W/m2.</p>
+        </section>
 
-      <section class="control-section">
-        <div class="section-heading">
-          <span>Climate Classes</span>
-          <div>
-            <button type="button" data-action="show-all">Show all</button>
-            <button type="button" data-action="show-none">Show none</button>
+        <section class="control-section">
+          <div class="section-heading">
+            <span>Climate Classes</span>
+            <div>
+              <button type="button" data-action="show-all">Show all</button>
+              <button type="button" data-action="show-none">Show none</button>
+            </div>
           </div>
-        </div>
-        <div class="zone-list">${groups}</div>
-      </section>
+          <div class="zone-list">${groups}</div>
+        </section>
 
-      <section class="control-section">
-        <label class="section-label" for="opacity-slider">${opacityLabel(opacity)}</label>
-        <input id="opacity-slider" type="range" min="0.2" max="1" step="0.05" value="${opacity}" />
-      </section>
+        <section class="control-section">
+          <label class="section-label" for="opacity-slider">${opacityLabel(opacity)}</label>
+          <input id="opacity-slider" type="range" min="0.2" max="1" step="0.05" value="${opacity}" />
+        </section>
 
-      <footer>
-        <p>Data source: <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">gloh2o.org/koppen</a>.</p>
-        <p>Place names from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> via Nominatim.</p>
-        <p>License: CC BY 4.0. Freely use, adapt, and share these maps with attribution to Beck et al. (2023).</p>
-        <p>Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles. High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections, Scientific Data 10, 724, doi:10.1038/s41597-023-02549-6 (2023).</p>
-      </footer>
+        <footer>
+          <p>Data source: <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">gloh2o.org/koppen</a>.</p>
+          <p>Place names from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> via Nominatim.</p>
+          <p>License: CC BY 4.0. Freely use, adapt, and share these maps with attribution to Beck et al. (2023).</p>
+          <p>Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles. High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections, Scientific Data 10, 724, doi:10.1038/s41597-023-02549-6 (2023).</p>
+        </footer>
+      </div>
     </div>
   `;
 
@@ -198,9 +209,7 @@ export function mountSidebar(
       const value = Number(input.dataset.zone);
       const current = new Set(
         Array.from(
-          document.querySelectorAll<HTMLInputElement>(
-            'input[data-zone]:checked',
-          ),
+          target.querySelectorAll<HTMLInputElement>('input[data-zone]:checked'),
         ).map((checkbox) => Number(checkbox.dataset.zone)),
       );
       if (input.checked) {
@@ -215,9 +224,7 @@ export function mountSidebar(
     if (input.dataset.group) {
       const currentState = new Set(
         Array.from(
-          document.querySelectorAll<HTMLInputElement>(
-            'input[data-zone]:checked',
-          ),
+          target.querySelectorAll<HTMLInputElement>('input[data-zone]:checked'),
         ).map((checkbox) => Number(checkbox.dataset.zone)),
       );
       for (const zone of zones.filter(
@@ -243,12 +250,18 @@ export function mountSidebar(
 
     if (button.dataset.action === 'show-all') {
       setState({ visibleZones: new Set(zones.map((zone) => zone.value)) });
+      return;
     }
     if (button.dataset.action === 'show-none') {
       setState({ visibleZones: new Set() });
+      return;
     }
     if (button.dataset.action === 'toggle-theme') {
       setState({ theme: getState().theme === 'dark' ? 'light' : 'dark' });
+      return;
+    }
+    if (button.dataset.action === 'toggle-sidebar') {
+      setState({ sidebarOpen: !getState().sidebarOpen });
     }
   });
 
@@ -256,6 +269,7 @@ export function mountSidebar(
     period: string;
     visibleZones: Set<number>;
     theme: Theme;
+    sidebarOpen: boolean;
   } | null = null;
 
   subscribe((state) => {
@@ -263,7 +277,8 @@ export function mountSidebar(
       !lastRender ||
       lastRender.period !== state.period ||
       lastRender.visibleZones !== state.visibleZones ||
-      lastRender.theme !== state.theme;
+      lastRender.theme !== state.theme ||
+      lastRender.sidebarOpen !== state.sidebarOpen;
 
     if (needsFullRender) {
       render(
@@ -274,11 +289,13 @@ export function mountSidebar(
         state.period,
         state.opacity,
         state.theme,
+        state.sidebarOpen,
       );
       lastRender = {
         period: state.period,
         visibleZones: state.visibleZones,
         theme: state.theme,
+        sidebarOpen: state.sidebarOpen,
       };
     } else {
       updateOpacity(target, state.opacity);
