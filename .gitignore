@@ -2,6 +2,9 @@ node_modules/
 dist/
 .vite/
 .codex
+.claude/
+AGENTS.md
+CLAUDE.md
 koppen_geiger_tif/
 
 *.log
