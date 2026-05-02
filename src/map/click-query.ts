@@ -3,6 +3,10 @@ import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
 import type { ZonesByValue } from '@/data/zones';
 
+function normalizeLongitude(lon: number): number {
+  return ((((lon + 180) % 360) + 360) % 360) - 180;
+}
+
 export function readClickedZone(
   event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>,
   layer: WebGLTileLayer,
@@ -20,5 +24,5 @@ export function readClickedZone(
   }
 
   const [lon, lat] = toLonLat(event.coordinate);
-  return { lon, lat, classValue };
+  return { lon: normalizeLongitude(lon), lat, classValue };
 }

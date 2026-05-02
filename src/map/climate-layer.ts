@@ -16,6 +16,7 @@ export function createGeoTiffSource(url: string): GeoTIFF {
     normalize: false,
     interpolate: false,
     convertToRGB: false,
+    wrapX: true,
   });
 }
 
