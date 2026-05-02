@@ -133,7 +133,7 @@ function render(
             <button class="sidebar-toggle" type="button" data-action="toggle-sidebar" aria-controls="sidebar-controls" aria-expanded="${sidebarOpen}">${sidebarOpen ? 'Hide' : 'Show'}</button>
           </div>
         </div>
-        <p>Historical and projected climate zones at 1 km resolution, from 1901 through 2099.</p>
+        <p>Historical and projected Köppen-Geiger climate zones from 1901 through 2099.</p>
       </header>
 
       <div class="sidebar-content" id="sidebar-controls">
