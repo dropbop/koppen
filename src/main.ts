@@ -1,11 +1,13 @@
 import 'ol/ol.css';
 import './styles.css';
+import { LOADING_DELAY_MS, MOBILE_SIDEBAR_QUERY } from '@/config';
 import { loadAppData, zoneList } from '@/data/zones';
 import { setState, subscribe } from '@/state';
 import { mountMap, whenSourceReady } from '@/map/map';
 import { mountBasemapToggle } from '@/ui/basemap-toggle';
 import { mountPopup } from '@/ui/popup';
 import { mountSidebar } from '@/ui/sidebar';
+import { loadPreferences, persistPreferences } from '@/preferences';
 
 function requiredElement<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -24,23 +26,50 @@ async function main(): Promise<void> {
 
   try {
     const { manifest, zones } = await loadAppData();
-    const initialZones = new Set(zoneList(zones).map((zone) => zone.value));
+    const zonesList = zoneList(zones);
+    const initialZones = new Set(zonesList.map((zone) => zone.value));
+    const preferences = loadPreferences(manifest, zonesList);
+    const mobileQuery = window.matchMedia(MOBILE_SIDEBAR_QUERY);
+    mobileQuery.addEventListener('change', (event) => {
+      setState({ sidebarOpen: !event.matches });
+    });
     setState({
-      period: manifest.defaultPeriod,
-      visibleZones: initialZones,
+      ...preferences,
+      period: preferences.period ?? manifest.defaultPeriod,
+      visibleZones: preferences.visibleZones ?? initialZones,
       loading: true,
+      sidebarOpen: !mobileQuery.matches,
     });
 
     const controller = mountMap(mapTarget, manifest, zones);
     mountSidebar(sidebarTarget, manifest, zones);
     mountBasemapToggle(basemapTarget);
     mountPopup(popupTarget, controller.map, zones);
+    let loadingTimer: number | undefined;
     subscribe((state) => {
       document.documentElement.classList.toggle(
         'dark-mode',
         state.theme === 'dark',
       );
-      loadingTarget.classList.toggle('is-hidden', !state.loading);
+      persistPreferences(state);
+
+      if (state.loading) {
+        if (
+          loadingTimer === undefined &&
+          loadingTarget.classList.contains('is-hidden')
+        ) {
+          loadingTimer = window.setTimeout(() => {
+            loadingTimer = undefined;
+            loadingTarget.classList.remove('is-hidden');
+          }, LOADING_DELAY_MS);
+        }
+      } else {
+        if (loadingTimer !== undefined) {
+          window.clearTimeout(loadingTimer);
+          loadingTimer = undefined;
+        }
+        loadingTarget.classList.add('is-hidden');
+      }
     });
 
     const initialSource = controller.climateLayer.getSource();
@@ -50,6 +79,7 @@ async function main(): Promise<void> {
     setState({ loading: false });
   } catch (error) {
     console.error(error);
+    loadingTarget.classList.remove('is-hidden');
     loadingTarget.innerHTML = `
       <div class="loading-card loading-error">
         <strong>Unable to load the map data.</strong>

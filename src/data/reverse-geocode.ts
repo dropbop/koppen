@@ -16,6 +16,7 @@ type NominatimResponse = {
 };
 
 const cache = new Map<string, string | null>();
+// Nominatim usage policy asks clients to stay at or below one request per second.
 const MIN_REQUEST_GAP_MS = 1100;
 
 let queue: Promise<unknown> = Promise.resolve();
