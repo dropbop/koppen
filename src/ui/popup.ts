@@ -75,13 +75,6 @@ export function mountPopup(
     }
   });
 
-  map.on('click', (event) => {
-    if (!target.contains(event.originalEvent.target as Node)) {
-      return;
-    }
-    event.preventDefault();
-  });
-
   subscribe((state) => {
     if (!state.popup) {
       target.innerHTML = '';

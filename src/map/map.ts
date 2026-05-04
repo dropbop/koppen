@@ -56,6 +56,10 @@ function cogForPeriod(manifest: Manifest, periodId: string): string {
   return resolveAssetUrl(period.cog);
 }
 
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'AbortError';
+}
+
 export function mountMap(
   target: HTMLElement,
   manifest: Manifest,
@@ -115,7 +119,10 @@ export function mountMap(
           },
         });
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        if (isAbortError(error)) {
+          return;
+        }
         const currentPopup = getState().popup;
         if (
           !currentPopup ||
