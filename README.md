@@ -52,6 +52,9 @@ It also ships future scenario layers for `2041-2070` and `2071-2099`:
 
 Source: <https://www.gloh2o.org/koppen/>
 
+Raw TIFF archives are published with the Scientific Data article on figshare:
+<https://doi.org/10.6084/m9.figshare.23801544>
+
 Approximate place names in popups are provided by OpenStreetMap through Nominatim reverse geocoding.
 
 License: Freely use, adapt, and share these maps under CC BY 4.0, with attribution to Beck et al. (2023).
