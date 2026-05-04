@@ -1,10 +1,8 @@
 node_modules/
 dist/
 .vite/
-.codex
-.claude/
-AGENTS.md
-CLAUDE.md
+*.tsbuildinfo
+
 koppen_geiger_tif/
 
 *.log
@@ -22,5 +20,3 @@ Thumbs.db
 
 coverage/
 .nyc_output/
-
-*.tsbuildinfo
