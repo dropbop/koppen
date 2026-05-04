@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Multi-agent coordination
+
+This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) simultaneously over the same SSH session, sharing one git working tree. Branch state and file contents can change underneath you mid-task.
+
+Rules for any agent operating here:
+
+1. **Verify branch and tree before any state-changing git action.** Run `git branch --show-current` and `git status` before commit, push, checkout, branch, or rebase. Do not assume the branch you last set is still current — another agent may have moved it.
+2. **Never commit directly to `main` while another agent may be active.** Always create or switch to a clearly-named feature branch first (`claude/<short-topic>`, `codex/<short-topic>`).
+3. **Stop and surface to the user if the working tree contains files or edits you did not make.** Do not stage, commit, or revert blindly — the unexpected changes likely belong to the other agent's in-progress work.
+4. **Pull before committing** so remote advances are visible.
+5. **Prefer separate `git worktree`s when truly parallel work is expected.** `git worktree add ../koppen-claude -b claude/<topic> main` (and the analogous form for codex) gives each agent its own checkout in its own directory; no interleaving is possible. This is the most reliable form of isolation when both agents are running concurrently.
+
 ## Commands
 
 - `pnpm dev` — Vite dev server, host 0.0.0.0.
