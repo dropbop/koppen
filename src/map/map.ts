@@ -16,6 +16,7 @@ import {
   createGeoTiffSource,
   setClimateLayerStyle,
 } from './climate-layer';
+import { createClickMarkerLayer, setClickMarker } from './click-marker';
 import { readClickedZone } from './click-query';
 
 export function whenSourceReady(source: Source): Promise<void> {
@@ -70,12 +71,14 @@ export function mountMap(
     initialVisibleZones,
     getState().opacity,
   );
+  const clickMarkerLayer = createClickMarkerLayer();
   let renderedPeriod = manifest.defaultPeriod;
   let renderedVisibleZones = initialVisibleZones;
+  let renderedMarkerCoord: [number, number] | null = null;
 
   const map = new Map({
     target,
-    layers: [basemaps.plain, basemaps.satellite, climateLayer],
+    layers: [basemaps.plain, basemaps.satellite, climateLayer, clickMarkerLayer],
     controls: defaultControls(),
     view: new View({
       center: fromLonLat([0, 18]),
@@ -134,6 +137,12 @@ export function mountMap(
     if (state.visibleZones !== renderedVisibleZones) {
       setClimateLayerStyle(climateLayer, zones, state.visibleZones);
       renderedVisibleZones = state.visibleZones;
+    }
+
+    const nextCoord = state.popup?.coordinate ?? null;
+    if (nextCoord !== renderedMarkerCoord) {
+      setClickMarker(clickMarkerLayer, nextCoord);
+      renderedMarkerCoord = nextCoord;
     }
 
     if (state.period && state.period !== renderedPeriod) {
