@@ -617,10 +617,15 @@ input[type='range'] {
 
 .ol-zoom button {
   position: relative;
+  display: block !important;
+  height: 1.75rem !important;
+  width: 1.75rem !important;
+  padding: 0 !important;
   background: var(--paper-card) !important;
   color: var(--ink) !important;
   border: 1px solid var(--rule-strong) !important;
   font-size: 0 !important;
+  line-height: 1 !important;
 }
 
 .ol-zoom button:hover {
@@ -629,7 +634,7 @@ input[type='range'] {
 }
 
 .ol-zoom button::before,
-.ol-zoom-in::after {
+.ol-zoom .ol-zoom-in::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -644,7 +649,7 @@ input[type='range'] {
   height: 1.5px;
 }
 
-.ol-zoom-in::after {
+.ol-zoom .ol-zoom-in::after {
   width: 1.5px;
   height: 12px;
 }
