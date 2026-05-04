@@ -172,6 +172,9 @@ function render(
         </details>
       </div>
     </div>
+    <button class="sidebar-edge-tab" type="button" data-action="toggle-sidebar" aria-controls="sidebar-controls" aria-expanded="${sidebarOpen}" aria-label="Show sidebar">
+      Show
+    </button>
   `;
 
   for (const checkbox of target.querySelectorAll<HTMLInputElement>(
