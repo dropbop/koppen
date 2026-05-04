@@ -7,4 +7,17 @@ export default tseslint.config(
   {
     ignores: ['dist', 'node_modules', 'public/data', 'koppen_geiger_tif'],
   },
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
 );
