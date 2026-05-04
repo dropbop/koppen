@@ -33,6 +33,7 @@ Static Vite + TypeScript app with no backend. Renders Köppen-Geiger climate ras
 - Two-space indent, single quotes, semicolons, kebab-case filenames (e.g. `climate-layer.ts`).
 - Strict TypeScript, ES modules, explicit imports. Keep modules focused: map behavior in `src/map/`, DOM/UI in `src/ui/`, data loading in `src/data/`.
 - Any string interpolated into `innerHTML` must go through `escapeHtml` from `src/utils/html.ts`. Climate-class names, place names, and period labels are all routed through it — keep that invariant for new UI code.
+- For icon-style indicators inside fixed-size boxes (close X, expand `+`/`–`, zoom `+`/`−`), draw shapes with pseudo-element rectangles or `linear-gradient` backgrounds rather than typing literal glyphs. Text glyphs sit at the font's math axis, not the geometric center of the em box, and visibly drift off-center even with `align-items: center`. See `.popup-close`, `.sidebar-citation summary::before`, and `.ol-zoom button` for the pattern.
 - ESLint ignores `dist`, `node_modules`, `public/data` (generated), and `koppen_geiger_tif` (raw inputs).
 
 ## Deploy
