@@ -1,5 +1,29 @@
 # Repository Guidelines
 
+## Multi-Agent Coordination
+
+This repo may be worked on by Claude Code and Codex at the same time. The safe default is **one agent per git worktree, one branch per task**. Do not run two agents in the same checkout or on the same branch unless the user explicitly asks for that.
+
+Recommended setup from the main repo:
+
+```bash
+git fetch origin
+git worktree add ../koppen-claude-<topic> -b claude/<topic> origin/main
+git worktree add ../koppen-codex-<topic> -b codex/<topic> origin/main
+```
+
+Then start each agent from its own worktree directory. Keep the primary checkout for human use.
+
+Rules for agents:
+
+- Before any state-changing git action, run `git status -sb` and `git branch --show-current`.
+- Use distinct branch prefixes: `claude/<topic>` for Claude Code and `codex/<topic>` for Codex.
+- Never let two agents work on the same branch at once.
+- Never commit directly to `main`.
+- Do not stage, commit, revert, or “clean up” files you did not change. If unexpected edits appear, stop and report them.
+- Push new branches with an upstream, e.g. `git push -u origin codex/<topic>`.
+- Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.
+
 ## Project Structure & Module Organization
 
 This is a static Vite + TypeScript app for a Köppen-Geiger climate map. Runtime source lives in `src/`: `main.ts` bootstraps the app, `state.ts` holds shared UI/map state, `src/map/` contains OpenLayers map code, `src/ui/` contains DOM UI modules, and `src/data/` handles data loading and reverse geocoding. Global styles are in `src/styles.css`.
