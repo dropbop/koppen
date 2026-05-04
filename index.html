@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Explore historical and projected Köppen-Geiger climate zones on an interactive global map."
+      content="Explore Köppen-Geiger climate zones on an interactive global map with historical periods, CMIP6 projections, and Beck et al. 1901-2099 climate dataset."
     />
+    <meta name="theme-color" content="#f5efe2" />
+    <link rel="canonical" href="https://dropbop.github.io/koppen/" />
     <meta property="og:title" content="Köppen-Geiger Interactive Map" />
     <meta
       property="og:description"
-      content="Explore historical and projected Köppen-Geiger climate zones on an interactive global map."
+      content="Explore Köppen-Geiger climate zones on an interactive global map with historical periods, CMIP6 projections, and Beck et al. 1901-2099 climate dataset."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="%BASE_URL%og-image.png" />
+    <meta property="og:url" content="https://dropbop.github.io/koppen/" />
+    <meta
+      property="og:image"
+      content="https://dropbop.github.io/koppen/og-image.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Köppen-Geiger Interactive Map" />
+    <meta
+      name="twitter:description"
+      content="Explore Köppen-Geiger climate zones on an interactive global map with historical periods, CMIP6 projections, and Beck et al. 1901-2099 climate dataset."
+    />
+    <meta
+      name="twitter:image"
+      content="https://dropbop.github.io/koppen/og-image.png"
+    />
     <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="%BASE_URL%favicon-180.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,6 +42,52 @@
   </head>
   <body>
     <div id="app">
+      <noscript>
+        <section>
+          <h2>Köppen-Geiger Interactive Map</h2>
+          <p>
+            This app needs JavaScript to load the interactive climate map,
+            switch periods and scenarios, and inspect climate classes by
+            location.
+          </p>
+        </section>
+      </noscript>
+      <section
+        class="visually-hidden"
+        aria-labelledby="seo-title"
+        aria-hidden="true"
+      >
+        <h1 id="seo-title">Köppen-Geiger Interactive Map</h1>
+        <p>
+          The Köppen-Geiger Interactive Map is a browser-based atlas for
+          exploring global climate classification zones from 1901 through 2099.
+          It displays historical Köppen-Geiger climate rasters and future CMIP6
+          projection scenarios derived from the Beck et al. high-resolution
+          dataset. The map lets visitors compare the 1901-1930, 1931-1960,
+          1961-1990, and 1991-2020 historical periods with projected
+          2041-2070 and 2071-2099 climates under SSP1-1.9, SSP1-2.6, SSP2-4.5,
+          SSP3-7.0, SSP4-3.4, SSP4-6.0, and SSP5-8.5 scenarios.
+        </p>
+        <p>
+          Users can pan and zoom the global map, change the selected period or
+          emissions scenario, toggle climate-zone groups, adjust raster opacity,
+          switch basemaps, and click any point to inspect its climate class and
+          approximate place name. The app is built as a static Vite and
+          TypeScript site using OpenLayers and Cloud Optimized GeoTIFFs, so the
+          published map runs without a backend service. It is intended for
+          students, researchers, planners, and climate-curious readers who need
+          a quick way to see where tropical, dry, temperate, continental, and
+          polar climate zones appear and how those zones may shift under
+          different emissions pathways.
+        </p>
+        <p>
+          Climate data is based on Beck, McVicar, Vergopolan, Berg, Lutsko,
+          Dufour, Zeng, Jiang, van Dijk, and Miralles, High-resolution
+          Köppen-Geiger maps for 1901-2099 based on constrained CMIP6
+          projections, Scientific Data 10, 724 (2023). Approximate place names
+          are provided by OpenStreetMap through Nominatim reverse geocoding.
+        </p>
+      </section>
       <div id="map" class="map"></div>
       <aside id="sidebar"></aside>
       <div id="basemap-toggle"></div>
