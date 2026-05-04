@@ -28,7 +28,7 @@ Before implementing any item, validate the underlying goal and decide whether th
 
 ## P0 — Features for v1.0
 
-- [ ] **Pin/marker at click point.** Add a Vector layer with a Point feature, styled as a small dot or pin. Update geometry when `state.popup` changes, hide when null. ~30 lines, behaves correctly under pan/zoom.
+- [x] **Pin/marker at click point.** Small accent-colored dot at the click coordinate. `src/map/click-marker.ts` exposes a Vector layer with one Point feature; geometry updates when `state.popup` changes and clears on null.
 - [x] **Desktop-collapsible sidebar.** Desktop panels can now collapse offscreen and return through an edge tab. State intentionally resets on reload; see intentional behavior above.
 - [ ] **Static SEO content block** in `index.html`. Add a `<noscript>` and visually-hidden `<section>` with 200–400 words of prose: what Köppen-Geiger is, what the app does, periods/scenarios available, attribution.
 - [ ] **Improved meta tags.** Tighten `<meta name="description">` to 150–160 chars with target keywords. Add Twitter Card meta (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`). Add `<meta name="theme-color">`.
