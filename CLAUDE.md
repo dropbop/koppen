@@ -27,7 +27,24 @@ Rules for any agent operating here:
 7. **Push new branches with upstream tracking.** Use `git push -u origin HEAD` for the first push of a branch.
 8. **Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.**
 
-These rules are duplicated verbatim in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing them.
+Standard task lifecycle:
+
+1. Start from an up-to-date `main`: `git fetch origin`, switch to `main`, then fast-forward with `git pull --ff-only`.
+2. Create a fresh task branch from `main` using the agent prefix, for example `codex/<topic>` or `claude/<topic>`.
+3. Do only the scoped task work on that branch.
+4. When the user asks, push the branch with upstream tracking and open a draft PR.
+5. Iterate on review feedback on the same task branch until the PR is complete.
+6. After the PR is merged, switch back to `main`, fetch/pull, confirm the merged branch has no remaining diff from `main`, then delete the completed local branch and, if still present, the completed remote branch.
+7. Start the next task from a new branch off the updated `main`; do not reuse a merged task branch.
+
+Cross-agent review workflow:
+
+- Expect a build/review cycle before merge. Run the relevant validation (`pnpm lint`, `pnpm build`, and manual checks when applicable) and record what was run in the PR.
+- Use a different agent for review than the authoring agent. Codex should review Claude PRs, and Claude should review Codex PRs.
+- Do not have Claude review a Claude-authored PR, and do not have Codex review a Codex-authored PR. The point is a genuinely different set of eyes.
+- The authoring agent addresses review feedback on its task branch unless the user explicitly asks another agent to take over implementation.
+
+This multi-agent coordination guidance is duplicated in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing it.
 
 ## Commands
 
