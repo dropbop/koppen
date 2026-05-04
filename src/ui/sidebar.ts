@@ -212,11 +212,7 @@ export function mountSidebar(
 
     if (input.dataset.zone) {
       const value = Number(input.dataset.zone);
-      const current = new Set(
-        Array.from(
-          target.querySelectorAll<HTMLInputElement>('input[data-zone]:checked'),
-        ).map((checkbox) => Number(checkbox.dataset.zone)),
-      );
+      const current = new Set(getState().visibleZones);
       if (input.checked) {
         current.add(value);
       } else {
@@ -227,11 +223,7 @@ export function mountSidebar(
     }
 
     if (input.dataset.group) {
-      const currentState = new Set(
-        Array.from(
-          target.querySelectorAll<HTMLInputElement>('input[data-zone]:checked'),
-        ).map((checkbox) => Number(checkbox.dataset.zone)),
-      );
+      const currentState = new Set(getState().visibleZones);
       for (const zone of zones.filter(
         (candidate) => candidate.groupCode === input.dataset.group,
       )) {

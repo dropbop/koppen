@@ -23,10 +23,10 @@ function placeText(popup: PopupState): string {
 
 function popupHtml(zone: Zone, popup: PopupState): string {
   const [r, g, b] = zone.rgb;
-  const placeRow =
+  const place =
     popup.placeStatus === 'loading'
-      ? ''
-      : `<p class="popup-place"><strong>Approx. place:</strong> ${escapeHtml(placeText(popup))}</p>`;
+      ? 'Looking up location...'
+      : escapeHtml(placeText(popup));
   return `
     <article class="popup-card">
       <button class="popup-close" type="button" aria-label="Close popup"></button>
@@ -38,7 +38,7 @@ function popupHtml(zone: Zone, popup: PopupState): string {
         <p class="popup-group">${escapeHtml(zone.group)}, ${escapeHtml(zone.groupDescription)}</p>
         <p>${escapeHtml(zone.description)}</p>
         <p><strong>Found in:</strong> ${escapeHtml(zone.examples)}</p>
-        ${placeRow}
+        <p class="popup-place"><strong>Approx. place:</strong> ${place}</p>
         <p class="popup-coordinates">${formatCoordinate(popup.lat, 'N', 'S')}, ${formatCoordinate(popup.lon, 'E', 'W')}</p>
       </div>
     </article>

@@ -1,6 +1,8 @@
 # TODO — v0.8 → v1.0
 
-Overview: The MVP for this project is complete, but it needs polish before I'm willing to serve it on a custom domain. The following list of tasks should be addressed prior to shipping. 
+Overview: The MVP for this project is complete, but it needs polish before I'm willing to serve it on a custom domain. The following list of tasks should be addressed prior to shipping.
+
+Before implementing any item, validate the underlying goal and decide whether the listed change is still the right way to achieve it. This TODO list includes AI-generated review notes, so treat it as a hypothesis queue rather than an instruction queue.
 
 ## Intentional behavior (not bugs)
 
@@ -8,11 +10,11 @@ Overview: The MVP for this project is complete, but it needs polish before I'm w
 
 ## P0 — Bugs and dead code
 
-- [ ] **Remove unused `theme` field** from `AppState` (`src/state.ts`) and `preferences.ts`, OR implement dark mode. Currently it's persisted but never read.
+- [x] **Remove unused `theme` field** from `AppState` (`src/state.ts`) and preferences. Validated goal: remove dead state instead of implementing unplanned dark mode.
 - [ ] **Add `AbortController` to reverse-geocode** (`src/data/reverse-geocode.ts`). Rapid clicks queue up Nominatim requests that nobody needs; abort previous in-flight when a new click comes in.
-- [ ] **Reserve vertical space in popup** for the place row to eliminate layout shift when async geocode lands. Either show a "Looking up location…" placeholder during the loading state or fix the row height.
-- [ ] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`). Current approach is fragile to programmatic state changes mid-render.
-- [ ] **Audit the `as Style` cast** in `src/map/climate-layer.ts`. Either tighten the type or add a comment explaining why it's bypassed.
+- [x] **Reserve vertical space in popup** for the place row. Validated goal: keep popup height stable by showing a loading row while reverse geocoding runs.
+- [x] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`).
+- [x] **Audit the `as Style` cast** in `src/map/climate-layer.ts`. Validated result: keep the cast, with a local comment explaining the OpenLayers expression typing gap.
 - [ ] **Verify the `event.preventDefault()` call** in `src/ui/popup.ts` is actually needed given `stopEvent: true` on the Overlay. Remove if redundant.
 
 ## P0 — Build and CI
