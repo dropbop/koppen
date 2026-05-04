@@ -68,26 +68,34 @@ input {
 
 .sidebar-panel {
   @apply flex min-h-full flex-col gap-6 px-6 py-7;
+}
+
+.sidebar-panel,
+.sidebar-content {
   scrollbar-width: thin;
   scrollbar-color: var(--rule-strong) transparent;
 }
 
-.sidebar-panel::-webkit-scrollbar {
+.sidebar-panel::-webkit-scrollbar,
+.sidebar-content::-webkit-scrollbar {
   width: 8px;
 }
 
-.sidebar-panel::-webkit-scrollbar-track {
+.sidebar-panel::-webkit-scrollbar-track,
+.sidebar-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.sidebar-panel::-webkit-scrollbar-thumb {
+.sidebar-panel::-webkit-scrollbar-thumb,
+.sidebar-content::-webkit-scrollbar-thumb {
   background: var(--rule-strong);
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
-.sidebar-panel::-webkit-scrollbar-thumb:hover {
+.sidebar-panel::-webkit-scrollbar-thumb:hover,
+.sidebar-content::-webkit-scrollbar-thumb:hover {
   background: var(--ink-muted);
   background-clip: padding-box;
 }

@@ -9,7 +9,6 @@ Overview: The MVP for this project is complete, but it needs polish before I'm w
 ## P0 — Bugs and dead code
 
 - [ ] **Remove unused `theme` field** from `AppState` (`src/state.ts`) and `preferences.ts`, OR implement dark mode. Currently it's persisted but never read.
-- [ ] **Re-attach mobile scrollbar styling.** The desktop-collapsible-sidebar refactor moved `scrollbar-width: thin; scrollbar-color: …` and the `::-webkit-scrollbar` rules from `.sidebar` to `.sidebar-panel`. On mobile the scrollable region is `.sidebar-content` (in the `@media (max-width: 767px)` block), which now has no custom scrollbar styling. Re-attach those rules to `.sidebar-content` (or a shared selector that covers both).
 - [ ] **Add `AbortController` to reverse-geocode** (`src/data/reverse-geocode.ts`). Rapid clicks queue up Nominatim requests that nobody needs; abort previous in-flight when a new click comes in.
 - [ ] **Reserve vertical space in popup** for the place row to eliminate layout shift when async geocode lands. Either show a "Looking up location…" placeholder during the loading state or fix the row height.
 - [ ] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`). Current approach is fragile to programmatic state changes mid-render.
@@ -28,7 +27,7 @@ Overview: The MVP for this project is complete, but it needs polish before I'm w
 ## P0 — Features for v1.0
 
 - [ ] **Pin/marker at click point.** Add a Vector layer with a Point feature, styled as a small dot or pin. Update geometry when `state.popup` changes, hide when null. ~30 lines, behaves correctly under pan/zoom.
-- [ ] **Desktop-collapsible sidebar.** Remove `display: none` on `.sidebar-toggle` outside mobile. Define `.sidebar.is-collapsed` for desktop with `transform: translateX(-100%)` + transition. Add a small persistent tab/chevron to bring it back. Persist state in preferences.
+- [x] **Desktop-collapsible sidebar.** Desktop panels can now collapse offscreen and return through an edge tab. State intentionally resets on reload; see intentional behavior above.
 - [ ] **Static SEO content block** in `index.html`. Add a `<noscript>` and visually-hidden `<section>` with 200–400 words of prose: what Köppen-Geiger is, what the app does, periods/scenarios available, attribution.
 - [ ] **Improved meta tags.** Tighten `<meta name="description">` to 150–160 chars with target keywords. Add Twitter Card meta (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`). Add `<meta name="theme-color">`.
 - [ ] **Verify og-image.png is 1200×630** and consider re-encoding to JPEG/WebP to drop from 153 KiB to ~50 KiB.
@@ -100,4 +99,3 @@ Existing coverage: 1440p Chrome/Firefox on Windows, Firefox on Android.
 - [ ] **Animated transitions across historical periods** (already in spec future-work list).
 - [ ] **Split-screen / swipe comparison** between periods (already in spec future-work list).
 - [ ] **Aggregate queries** — "what % of land is Cfa?" by period.
-
