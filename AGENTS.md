@@ -2,7 +2,7 @@
 
 ## Multi-Agent Coordination
 
-This repo may be worked on by Claude Code and Codex at the same time. The safe default is **one agent per git worktree, one branch per task**. Do not run two agents in the same checkout or on the same branch unless the user explicitly asks for that.
+This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) at the same time. **Each active AI session must have its own worktree and task branch. Never reuse another agent's worktree, even temporarily.**
 
 Recommended setup from the main repo:
 
@@ -12,17 +12,20 @@ git worktree add ../koppen-claude-<topic> -b claude/<topic> origin/main
 git worktree add ../koppen-codex-<topic> -b codex/<topic> origin/main
 ```
 
-Then start each agent from its own worktree directory. Keep the primary checkout for human use.
+Start each agent from its own worktree directory. Keep the primary checkout for human use.
 
-Rules for agents:
+Rules for any agent operating here:
 
-- Before any state-changing git action, run `git status -sb` and `git branch --show-current`.
-- Use distinct branch prefixes: `claude/<topic>` for Claude Code and `codex/<topic>` for Codex.
-- Never let two agents work on the same branch at once.
-- Never commit directly to `main`.
-- Do not stage, commit, revert, or “clean up” files you did not change. If unexpected edits appear, stop and report them.
-- Push new branches with an upstream, e.g. `git push -u origin codex/<topic>`.
-- Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.
+1. **Verify branch and tree before any state-changing git action.** Run `git branch --show-current` and `git status -sb` before any of `commit`, `push`, `switch`/`checkout`, `branch`, `merge`, `rebase`, `reset`, or `clean`. Do not assume the branch you last set is still current — another agent may have moved it.
+2. **Use separate branch prefixes.** Claude Code uses `claude/<short-topic>`; Codex uses `codex/<short-topic>`.
+3. **Never let two agents work on the same branch at once.**
+4. **Never commit directly to `main`.**
+5. **Stop and surface to the user if the working tree contains files or edits you did not make.** Do not stage, commit, or revert blindly — the unexpected changes likely belong to the other agent's in-progress work.
+6. **Do not run destructive cleanup commands unless the user explicitly asks.** That includes `git reset --hard`, `git clean -fd`, `git checkout -- .`, `git restore .`, force-deleting another agent's branch, and similar blunt instruments.
+7. **Push new branches with upstream tracking.** Use `git push -u origin HEAD` for the first push of a branch.
+8. **Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.**
+
+These rules are duplicated verbatim in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing them.
 
 ## Project Structure & Module Organization
 

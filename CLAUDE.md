@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Multi-agent coordination
 
-This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) at the same time. The safe pattern is **one agent per git worktree, one branch per task**. Do not share one checkout or branch between agents unless the user explicitly asks for that.
+This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) at the same time. **Each active AI session must have its own worktree and task branch. Never reuse another agent's worktree, even temporarily.**
 
 Recommended setup from the main repo:
 
@@ -18,13 +18,16 @@ Start each agent from its own worktree directory. Keep the primary checkout for 
 
 Rules for any agent operating here:
 
-1. **Verify branch and tree before any state-changing git action.** Run `git branch --show-current` and `git status` before commit, push, checkout, branch, or rebase. Do not assume the branch you last set is still current — another agent may have moved it.
+1. **Verify branch and tree before any state-changing git action.** Run `git branch --show-current` and `git status -sb` before any of `commit`, `push`, `switch`/`checkout`, `branch`, `merge`, `rebase`, `reset`, or `clean`. Do not assume the branch you last set is still current — another agent may have moved it.
 2. **Use separate branch prefixes.** Claude Code uses `claude/<short-topic>`; Codex uses `codex/<short-topic>`.
 3. **Never let two agents work on the same branch at once.**
 4. **Never commit directly to `main`.**
 5. **Stop and surface to the user if the working tree contains files or edits you did not make.** Do not stage, commit, or revert blindly — the unexpected changes likely belong to the other agent's in-progress work.
-6. **Push new branches with upstream tracking.** Use `git push -u origin <branch>` for the first push of a branch.
-7. **Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.**
+6. **Do not run destructive cleanup commands unless the user explicitly asks.** That includes `git reset --hard`, `git clean -fd`, `git checkout -- .`, `git restore .`, force-deleting another agent's branch, and similar blunt instruments.
+7. **Push new branches with upstream tracking.** Use `git push -u origin HEAD` for the first push of a branch.
+8. **Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.**
+
+These rules are duplicated verbatim in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing them.
 
 ## Commands
 
