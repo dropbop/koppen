@@ -11,11 +11,12 @@ Before implementing any item, validate the underlying goal and decide whether th
 ## P0 — Bugs and dead code
 
 - [x] **Remove unused `theme` field** from `AppState` (`src/state.ts`) and preferences. Validated goal: remove dead state instead of implementing unplanned dark mode.
-- [ ] **Add `AbortController` to reverse-geocode** (`src/data/reverse-geocode.ts`). Rapid clicks queue up Nominatim requests that nobody needs; abort previous in-flight when a new click comes in.
+- [x] **Add `AbortController` to reverse-geocode** (`src/data/reverse-geocode.ts`). Validated goal: keep only the latest uncached Nominatim lookup active while preserving request spacing and cache behavior.
 - [x] **Reserve vertical space in popup** for the place row. Validated goal: keep popup height stable by showing a loading row while reverse geocoding runs.
 - [x] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`).
 - [x] **Audit the `as Style` cast** in `src/map/climate-layer.ts`. Validated result: keep the cast, with a local comment explaining the OpenLayers expression typing gap.
-- [ ] **Verify the `event.preventDefault()` call** in `src/ui/popup.ts` is actually needed given `stopEvent: true` on the Overlay. Remove if redundant.
+- [x] **Verify the `event.preventDefault()` call** in `src/ui/popup.ts` is actually needed given `stopEvent: true` on the Overlay. Validated result: redundant overlay click prevention removed.
+- [ ] **Test adaptive popup placement near viewport edges.** Current popups open above the click; near the top of the map they can extend into inaccessible space. Compare alternate placement/auto-pan approaches manually before choosing behavior.
 
 ## P0 — Build and CI
 
@@ -23,7 +24,7 @@ Before implementing any item, validate the underlying goal and decide whether th
 - [ ] **Drop `CNAME` into `public/`** (not repo root). Vite copies `public/` contents into the artifact verbatim.
 - [ ] **Remove redundant `Typecheck` step from `deploy.yml`** — `pnpm build` already runs `tsc && vite build`, so typecheck happens twice. Drop one.
 - [ ] **Add PR-level CI** — `deploy.yml` only triggers on push to main. Add `pull_request` trigger or split into `ci.yml` (lint + build on PRs) and `deploy.yml` (main only).
-- [ ] **Tighten ESLint** — current config is `js.recommended + tseslint.recommended`. Add `@typescript-eslint/no-unused-vars` (or upgrade to `tseslint.configs.strict`) to catch dead code like the `theme` field automatically.
+- [x] **Tighten ESLint** — current config is `js.recommended + tseslint.recommended`. Validated goal: explicitly enforce `@typescript-eslint/no-unused-vars` with underscore ignore patterns.
 - [ ] **Pin OL more conservatively** — `^10.6.1` allows minor bumps; OL has shipped breaking changes to `WebGLTile` style API in minor versions. Consider `~10.6.1` (patch only).
 
 ## P0 — Features for v1.0

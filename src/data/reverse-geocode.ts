@@ -21,18 +21,56 @@ const MIN_REQUEST_GAP_MS = 1100;
 
 let queue: Promise<unknown> = Promise.resolve();
 let lastDispatch = 0;
+let activeController: AbortController | null = null;
 
-function schedule<T>(work: () => Promise<T>): Promise<T> {
+function abortError(): DOMException {
+  return new DOMException('Reverse geocode request was aborted.', 'AbortError');
+}
+
+function throwIfAborted(signal: AbortSignal): void {
+  if (signal.aborted) {
+    throw abortError();
+  }
+}
+
+function waitForGap(ms: number, signal: AbortSignal): Promise<void> {
+  throwIfAborted(signal);
+  if (ms <= 0) {
+    return Promise.resolve();
+  }
+  return new Promise<void>((resolve, reject) => {
+    const onAbort = (): void => {
+      window.clearTimeout(timeout);
+      reject(abortError());
+    };
+    const timeout = window.setTimeout(() => {
+      signal.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    signal.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
+function schedule<T>(
+  work: (signal: AbortSignal) => Promise<T>,
+  signal: AbortSignal,
+): Promise<T> {
   const result = queue.then(async () => {
+    throwIfAborted(signal);
     const wait = Math.max(0, lastDispatch + MIN_REQUEST_GAP_MS - Date.now());
     if (wait > 0) {
-      await new Promise<void>((resolve) => setTimeout(resolve, wait));
+      await waitForGap(wait, signal);
     }
     lastDispatch = Date.now();
-    return work();
+    return work(signal);
   });
   queue = result.catch(() => undefined);
   return result;
+}
+
+function cancelActiveLookup(): void {
+  activeController?.abort();
+  activeController = null;
 }
 
 function cacheKey(lon: number, lat: number): string {
@@ -75,15 +113,20 @@ export async function reverseGeocode(
   lat: number,
 ): Promise<string | null> {
   const key = cacheKey(lon, lat);
+  cancelActiveLookup();
   if (cache.has(key)) {
     return cache.get(key) ?? null;
   }
 
-  return schedule(async () => {
+  const controller = new AbortController();
+  activeController = controller;
+
+  return schedule(async (signal) => {
     const cached = cache.get(key);
     if (cached !== undefined) {
       return cached;
     }
+    throwIfAborted(signal);
 
     const url = new URL('https://nominatim.openstreetmap.org/reverse');
     url.searchParams.set('format', 'jsonv2');
@@ -93,7 +136,7 @@ export async function reverseGeocode(
     url.searchParams.set('addressdetails', '1');
     url.searchParams.set('accept-language', 'en');
 
-    const response = await fetch(url);
+    const response = await fetch(url, { signal });
     if (!response.ok) {
       throw new Error(`Nominatim lookup failed: ${response.status}`);
     }
@@ -103,5 +146,9 @@ export async function reverseGeocode(
     );
     cache.set(key, placeName);
     return placeName;
+  }, controller.signal).finally(() => {
+    if (activeController === controller) {
+      activeController = null;
+    }
   });
 }
