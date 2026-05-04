@@ -1,7 +1,6 @@
 import { DEFAULT_OPACITY } from '@/config';
 
 export type Basemap = 'plain' | 'satellite';
-export type Theme = 'light' | 'dark';
 
 export type PopupState = {
   lon: number;
@@ -19,7 +18,6 @@ export type AppState = {
   popup: PopupState | null;
   loading: boolean;
   opacity: number;
-  theme: Theme;
   sidebarOpen: boolean;
 };
 
@@ -30,7 +28,6 @@ const state: AppState = {
   popup: null,
   loading: true,
   opacity: DEFAULT_OPACITY,
-  theme: 'light',
   sidebarOpen: true,
 };
 

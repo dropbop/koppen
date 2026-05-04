@@ -29,6 +29,8 @@ export function buildClimateStyle(
     expression.push(zone.value, colorExpression(zone, visibleZones));
   }
   expression.push([0, 0, 0, 0]);
+  // OpenLayers accepts runtime expression arrays here, but its Style type does
+  // not model this match expression shape precisely.
   return {
     color: expression,
   } as Style;

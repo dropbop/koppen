@@ -1,4 +1,4 @@
-import type { AppState, Basemap, Theme } from '@/state';
+import type { AppState, Basemap } from '@/state';
 import type { Manifest, Zone } from '@/data/zones';
 
 const STORAGE_KEY = 'koppen-geiger-preferences';
@@ -8,7 +8,6 @@ type StoredPreferences = {
   basemap?: Basemap;
   visibleZones?: number[];
   opacity?: number;
-  theme?: Theme;
 };
 
 let lastSerializedPreferences = '';
@@ -50,10 +49,6 @@ export function loadPreferences(
   ) {
     preferences.opacity = stored.opacity;
   }
-  if (stored.theme === 'light' || stored.theme === 'dark') {
-    preferences.theme = stored.theme;
-  }
-
   return preferences;
 }
 
@@ -64,7 +59,6 @@ export function persistPreferences(state: Readonly<AppState>): void {
       basemap: state.basemap,
       visibleZones: Array.from(state.visibleZones),
       opacity: state.opacity,
-      theme: state.theme,
     };
     const serialized = JSON.stringify(preferences);
     if (serialized === lastSerializedPreferences) {
