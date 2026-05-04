@@ -2,10 +2,14 @@
 
 Overview: The MVP for this project is complete, but it needs polish before I'm willing to serve it on a custom domain. The following list of tasks should be addressed prior to shipping. 
 
+## Intentional behavior (not bugs)
+
+- **`sidebarOpen` is not persisted in preferences.** State resets to the default on every reload (open on desktop, collapsed bottom-sheet on mobile). Decision: the first-paint view should communicate "this is what the app does." Restoring a previously-collapsed sidebar would hide the controls from a returning visitor, and the assumption is most users don't visit often enough to care about preserving the collapsed state across sessions.
+
 ## P0 — Bugs and dead code
 
 - [ ] **Remove unused `theme` field** from `AppState` (`src/state.ts`) and `preferences.ts`, OR implement dark mode. Currently it's persisted but never read.
-- [ ] **Persist `sidebarOpen`** in preferences. Field is read from state but reset on every page load.
+- [ ] **Re-attach mobile scrollbar styling.** The desktop-collapsible-sidebar refactor moved `scrollbar-width: thin; scrollbar-color: …` and the `::-webkit-scrollbar` rules from `.sidebar` to `.sidebar-panel`. On mobile the scrollable region is `.sidebar-content` (in the `@media (max-width: 767px)` block), which now has no custom scrollbar styling. Re-attach those rules to `.sidebar-content` (or a shared selector that covers both).
 - [ ] **Add `AbortController` to reverse-geocode** (`src/data/reverse-geocode.ts`). Rapid clicks queue up Nominatim requests that nobody needs; abort previous in-flight when a new click comes in.
 - [ ] **Reserve vertical space in popup** for the place row to eliminate layout shift when async geocode lands. Either show a "Looking up location…" placeholder during the loading state or fix the row height.
 - [ ] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`). Current approach is fragile to programmatic state changes mid-render.
