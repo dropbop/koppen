@@ -16,7 +16,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "ol": "^10.6.1"
+    "ol": "~10.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

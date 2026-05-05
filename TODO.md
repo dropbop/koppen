@@ -22,14 +22,14 @@ Before implementing any item, validate the underlying goal and decide whether th
 
 - [ ] **Switch `vite.config.ts` `base` default to `/`** for the custom-domain build, OR set `BASE_PATH=/` env in `deploy.yml`'s build step. Currently defaults to `/koppen/`, which will break asset URLs on a custom domain.
 - [ ] **Drop `CNAME` into `public/`** (not repo root). Vite copies `public/` contents into the artifact verbatim.
-- [ ] **Remove redundant `Typecheck` step from `deploy.yml`** — `pnpm build` already runs `tsc && vite build`, so typecheck happens twice. Drop one.
-- [ ] **Add PR-level CI** — `deploy.yml` only triggers on push to main. Add `pull_request` trigger or split into `ci.yml` (lint + build on PRs) and `deploy.yml` (main only).
+- [x] **Remove redundant `Typecheck` step from `deploy.yml`** — `pnpm build` already runs `tsc && vite build`, so typecheck happens twice. Drop one.
+- [x] **Add PR-level CI** — `deploy.yml` only triggers on push to main. Add `pull_request` trigger or split into `ci.yml` (lint + build on PRs) and `deploy.yml` (main only).
 - [x] **Tighten ESLint** — current config is `js.recommended + tseslint.recommended`. Validated goal: explicitly enforce `@typescript-eslint/no-unused-vars` with underscore ignore patterns.
-- [ ] **Pin OL more conservatively** — `^10.6.1` allows minor bumps; OL has shipped breaking changes to `WebGLTile` style API in minor versions. Consider `~10.6.1` (patch only).
+- [x] **Pin OL more conservatively** — `^10.6.1` allows minor bumps; OL has shipped breaking changes to `WebGLTile` style API in minor versions. Pinned to `~10.9.0`, matching the current lockfile resolution while allowing patch updates.
 
 ## P0 — Features for v1.0
 
-Next implementation PR scope: SEO/static assets. Keep that PR focused on `index.html` SEO prose and metadata, crawler/static files in `public/`, `og-image.png` verification or re-encoding, README raw-data download notes, and TODO ownership notes. Leave DNS/HTTPS and build/deploy workflow changes for the deploy-readiness PR unless the canonical domain is finalized during that work.
+Remaining P0 feature/deploy work is custom-domain readiness and popup edge-placement validation. Keep domain-dependent URL, `BASE_PATH`, `CNAME`, DNS, and HTTPS changes together once the canonical domain is finalized.
 
 - [x] **Pin/marker at click point.** Small accent-colored dot at the click coordinate. `src/map/click-marker.ts` exposes a Vector layer with one Point feature; geometry updates when `state.popup` changes and clears on null.
 - [x] **Desktop-collapsible sidebar.** Desktop panels can now collapse offscreen and return through an edge tab. State intentionally resets on reload; see intentional behavior above.
