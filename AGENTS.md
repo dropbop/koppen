@@ -2,9 +2,9 @@
 
 ## Multi-Agent Coordination
 
-This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) at the same time. **Each active AI session must have its own worktree and task branch. Never reuse another agent's worktree, even temporarily.**
+This repo is sometimes worked on by more than one AI agent (Claude Code and Codex) at the same time. **Worktree separation is required when two agents are making commits at the same time.** Each committing agent must use its own worktree and task branch, and must never reuse another agent's worktree, even temporarily. For sequential tasks, the implementing agent may use the primary checkout and switch branches through the lifecycle below. Review-only sessions that inspect GitHub through `gh pr view`, `gh pr diff`, or the GitHub API do not need a local worktree.
 
-Recommended setup from the main repo:
+Recommended setup for concurrent implementation from the main repo:
 
 ```bash
 git fetch origin
@@ -21,11 +21,28 @@ Rules for any agent operating here:
 3. **Never let two agents work on the same branch at once.**
 4. **Never commit directly to `main`.**
 5. **Stop and surface to the user if the working tree contains files or edits you did not make.** Do not stage, commit, or revert blindly — the unexpected changes likely belong to the other agent's in-progress work.
-6. **Do not run destructive cleanup commands unless the user explicitly asks.** That includes `git reset --hard`, `git clean -fd`, `git checkout -- .`, `git restore .`, force-deleting another agent's branch, and similar blunt instruments.
+6. **Do not run destructive cleanup commands unless the user explicitly asks.** That includes `git reset --hard`, `git clean -fd`, `git checkout -- .`, `git restore .`, force-deleting another agent's branch, and similar blunt instruments. Exception: after a PR is merged, deleting your own merged task branch locally and deleting its matching remote branch is part of the lifecycle below and does not require a second ask.
 7. **Push new branches with upstream tracking.** Use `git push -u origin HEAD` for the first push of a branch.
-8. **Only push, open PRs, mark PRs ready, or merge when the user explicitly asks.**
+8. **Only push commits, open PRs, mark PRs ready, or merge when the user explicitly asks.** Post-merge deletion of your own merged remote task branch is covered by lifecycle cleanup.
 
-These rules are duplicated verbatim in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing them.
+Standard task lifecycle:
+
+1. In the checkout or worktree that will own the next task, start from an up-to-date `main`: `git fetch origin`, switch to `main`, then fast-forward with `git pull --ff-only`.
+2. Create a fresh task branch from `main` using the agent prefix, for example `codex/<topic>` or `claude/<topic>`.
+3. Do only the scoped task work on that branch.
+4. When the user asks, push the branch with upstream tracking and open a draft PR.
+5. Iterate on review feedback on the same task branch until the PR is complete.
+6. After the PR is merged, switch back to `main`, fetch/pull, confirm the merged branch has no remaining diff from `main`, then delete the completed local branch and, if still present, the completed remote branch.
+7. Start the next task from a new branch off the updated `main`; do not reuse a merged task branch.
+
+Cross-agent review workflow:
+
+- Expect a build/review cycle before merge. Run the relevant validation (`pnpm lint`, `pnpm build`, and manual checks when applicable) and record what was run in the PR.
+- Use a different agent family for review than the authoring agent. Codex should review Claude PRs, and Claude should review Codex PRs.
+- Do not have Claude review a Claude-authored PR, and do not have Codex review a Codex-authored PR, including subagents invoked by the same agent family. A Claude-spawned reviewer does not count as cross-agent review for Claude-authored work, and the same rule applies to Codex-authored work. The point is a genuinely different set of eyes.
+- The authoring agent addresses review feedback on its task branch unless the user explicitly asks another agent to take over implementation.
+
+This multi-agent coordination guidance is duplicated in `CLAUDE.md` and `AGENTS.md`. Keep both copies in sync when changing it.
 
 ## Project Structure & Module Organization
 
