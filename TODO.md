@@ -100,7 +100,7 @@ Timing and ownership: run this section after most P0/P1 improvements are in plac
 
 - [ ] **Permalinks** — encode `period`, `visibleZones`, map center, zoom in URL params. Single biggest feature for shareability ("look at climate change in 2099" with a pre-loaded view).
 - [ ] **About / methodology blurb** in sidebar, separate from the citation collapse. One-paragraph "what am I looking at" for first-time visitors.
-- [ ] **Multi-favicon sizes** — 16, 32, 48, 192, 512 px PNGs for various contexts.
+- [x] **Multi-favicon sizes** — 16, 32, 48, 192, 512 px PNGs for various contexts.
 - [ ] **Print stylesheet** — people do print maps.
 - [ ] **Privacy-friendly analytics** (Plausible, Umami, or skip).
 - [ ] **JSON-LD structured data** — `WebApplication` or `Dataset` block for SEO.
