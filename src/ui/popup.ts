@@ -1,9 +1,17 @@
-import Overlay from 'ol/Overlay';
+import Overlay, { type Positioning } from 'ol/Overlay';
 import type Map from 'ol/Map';
 import { setState, subscribe } from '@/state';
 import type { PopupState } from '@/state';
 import type { Zone, ZonesByValue } from '@/data/zones';
 import { escapeHtml } from '@/utils/html';
+
+const POPUP_GAP_PX = 14;
+const POPUP_VIEWPORT_MARGIN_PX = 20;
+
+type PopupPlacement = {
+  positioning: Positioning;
+  offset: [number, number];
+};
 
 function formatCoordinate(
   value: number,
@@ -45,6 +53,58 @@ function popupHtml(zone: Zone, popup: PopupState): string {
   `;
 }
 
+function popupPlacement(
+  map: Map,
+  target: HTMLElement,
+  coordinate: [number, number],
+): PopupPlacement {
+  const pixel = map.getPixelFromCoordinate(coordinate);
+  const mapSize = map.getSize();
+  const popupHeight = target.getBoundingClientRect().height;
+
+  if (!pixel || !mapSize || popupHeight === 0) {
+    return {
+      positioning: 'bottom-center',
+      offset: [0, -POPUP_GAP_PX],
+    };
+  }
+
+  const requiredSpace = popupHeight + POPUP_GAP_PX;
+  const spaceAbove = pixel[1] - POPUP_VIEWPORT_MARGIN_PX;
+  const spaceBelow = mapSize[1] - pixel[1] - POPUP_VIEWPORT_MARGIN_PX;
+  const shouldOpenBelow =
+    spaceAbove < requiredSpace && spaceBelow > spaceAbove;
+
+  return shouldOpenBelow
+    ? {
+        positioning: 'top-center',
+        offset: [0, POPUP_GAP_PX],
+      }
+    : {
+        positioning: 'bottom-center',
+        offset: [0, -POPUP_GAP_PX],
+      };
+}
+
+function placePopup(
+  overlay: Overlay,
+  map: Map,
+  target: HTMLElement,
+  coordinate: [number, number],
+): void {
+  overlay.setPosition(coordinate);
+
+  const placement = popupPlacement(map, target, coordinate);
+  overlay.setPositioning(placement.positioning);
+  overlay.setOffset(placement.offset);
+  overlay.panIntoView({
+    margin: POPUP_VIEWPORT_MARGIN_PX,
+    animation: {
+      duration: 200,
+    },
+  });
+}
+
 export function mountPopup(
   target: HTMLElement,
   map: Map,
@@ -54,12 +114,7 @@ export function mountPopup(
     element: target,
     positioning: 'bottom-center',
     stopEvent: true,
-    offset: [0, -14],
-    autoPan: {
-      animation: {
-        duration: 200,
-      },
-    },
+    offset: [0, -POPUP_GAP_PX],
   });
   map.addOverlay(overlay);
 
@@ -90,6 +145,6 @@ export function mountPopup(
     }
 
     target.innerHTML = popupHtml(zone, state.popup);
-    overlay.setPosition(state.popup.coordinate);
+    placePopup(overlay, map, target, state.popup.coordinate);
   });
 }

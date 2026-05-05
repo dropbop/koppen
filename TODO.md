@@ -16,7 +16,7 @@ Before implementing any item, validate the underlying goal and decide whether th
 - [x] **Refactor sidebar zone-toggle handlers** to derive new state from `getState().visibleZones` instead of querying the DOM (`target.querySelectorAll('input[data-zone]:checked')`).
 - [x] **Audit the `as Style` cast** in `src/map/climate-layer.ts`. Validated result: keep the cast, with a local comment explaining the OpenLayers expression typing gap.
 - [x] **Verify the `event.preventDefault()` call** in `src/ui/popup.ts` is actually needed given `stopEvent: true` on the Overlay. Validated result: redundant overlay click prevention removed.
-- [ ] **Test adaptive popup placement near viewport edges.** Current popups open above the click; near the top of the map they can extend into inaccessible space. Compare alternate placement/auto-pan approaches manually before choosing behavior.
+- [x] **Test adaptive popup placement near viewport edges.** Validated result: keep the popup above the click when there is room, flip it below the click near the top edge, and keep OpenLayers pan-into-view as a fallback for side and bottom overflow.
 
 ## P0 — Build and CI
 
