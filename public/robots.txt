@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dropbop.github.io/koppen/sitemap.xml
+Sitemap: https://koppenmap.com/sitemap.xml

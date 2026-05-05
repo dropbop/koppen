@@ -20,8 +20,8 @@ Before implementing any item, validate the underlying goal and decide whether th
 
 ## P0 — Build and CI
 
-- [ ] **Switch `vite.config.ts` `base` default to `/`** for the custom-domain build, OR set `BASE_PATH=/` env in `deploy.yml`'s build step. Currently defaults to `/koppen/`, which will break asset URLs on a custom domain.
-- [ ] **Drop `CNAME` into `public/`** (not repo root). Vite copies `public/` contents into the artifact verbatim.
+- [x] **Switch `vite.config.ts` `base` default to `/`** for the custom-domain build. Validated goal: default builds now target the `koppenmap.com` root path while `BASE_PATH` remains available for project-page builds.
+- [x] **Drop `CNAME` into `public/`** (not repo root). Vite copies `public/` contents into the artifact verbatim.
 - [x] **Remove redundant `Typecheck` step from `deploy.yml`** — `pnpm build` already runs `tsc && vite build`, so typecheck happens twice. Drop one.
 - [x] **Add PR-level CI** — `deploy.yml` only triggers on push to main. Add `pull_request` trigger or split into `ci.yml` (lint + build on PRs) and `deploy.yml` (main only).
 - [x] **Tighten ESLint** — current config is `js.recommended + tseslint.recommended`. Validated goal: explicitly enforce `@typescript-eslint/no-unused-vars` with underscore ignore patterns.
@@ -29,7 +29,7 @@ Before implementing any item, validate the underlying goal and decide whether th
 
 ## P0 — Features for v1.0
 
-Remaining P0 feature/deploy work is custom-domain readiness and popup edge-placement validation. Keep domain-dependent URL, `BASE_PATH`, `CNAME`, DNS, and HTTPS changes together once the canonical domain is finalized.
+Remaining P0 feature/deploy work is final DNS/HTTPS verification for `koppenmap.com`. The canonical domain is the apex host; `www.koppenmap.com` should redirect there through GitHub Pages.
 
 - [x] **Pin/marker at click point.** Small accent-colored dot at the click coordinate. `src/map/click-marker.ts` exposes a Vector layer with one Point feature; geometry updates when `state.popup` changes and clears on null.
 - [x] **Desktop-collapsible sidebar.** Desktop panels can now collapse offscreen and return through an edge tab. State intentionally resets on reload; see intentional behavior above.
@@ -39,10 +39,10 @@ Remaining P0 feature/deploy work is custom-domain readiness and popup edge-place
 - [ ] **Consider re-encoding `og-image.png`** to JPEG/WebP to drop from 153 KiB to ~50 KiB. Deferred to the performance/public-launch pass.
 - [x] **Add `robots.txt` and `sitemap.xml`** to `public/`.
 - [x] **Add `404.html`** to `public/` so direct hits to non-existent paths don't show GitHub's default.
-- [ ] **Switch `vite.config.ts` `base` to `/`** for custom-domain build (covered in Build and CI section).
-- [ ] **Add `CNAME` file** to `public/` (covered in Build and CI section).
-- [ ] **When custom domain lands, update hard-coded `dropbop.github.io/koppen` references** in `index.html` (canonical, `og:url`, `og:image`, `twitter:image`), `public/404.html`, `public/robots.txt`, and `public/sitemap.xml`.
-- [ ] **Configure DNS** (A records to GitHub IPs or CNAME to `<user>.github.io`). Pick apex vs www as canonical, redirect the other.
+- [x] **Switch `vite.config.ts` `base` to `/`** for custom-domain build (covered in Build and CI section).
+- [x] **Add `CNAME` file** to `public/` (covered in Build and CI section).
+- [x] **When custom domain lands, update hard-coded GitHub Pages deployment references** in `index.html` (canonical, `og:url`, `og:image`, `twitter:image`), `public/404.html`, `public/robots.txt`, and `public/sitemap.xml`.
+- [ ] **Verify DNS and GitHub Pages custom-domain settings.** User reports `koppenmap.com` and `www` records point to `dropbop.github.io`; confirm GitHub Pages is configured for `koppenmap.com` and redirects `www` to the apex.
 - [ ] **Verify HTTPS provisioning** completes after DNS propagates (Let's Encrypt via GitHub).
 - [x] **Document raw data download** in README — link to the figshare DOI so contributors know where to get `koppen_geiger_tif/` from.
 
