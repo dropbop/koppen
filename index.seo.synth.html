@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections</title>
+    <meta
+      name="description"
+      content="Explore an interactive global Köppen-Geiger climate classification map with historical periods from 1901–2020 and CMIP6 projections to 2099 across multiple SSP scenarios."
+    />
+    <meta
+      name="robots"
+      content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#f5efe2" />
+    <link rel="canonical" href="https://dropbop.github.io/koppen/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dropbop.github.io/koppen/" />
+    <meta property="og:site_name" content="Köppen-Geiger Interactive Map" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections"
+    />
+    <meta
+      property="og:description"
+      content="Interactive global map of Köppen-Geiger climate zones from 1901–2099. Compare historical periods and CMIP6 SSP scenarios in the browser."
+    />
+    <meta
+      property="og:image"
+      content="https://dropbop.github.io/koppen/og-image.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="Preview of the Köppen-Geiger Interactive Map"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections"
+    />
+    <meta
+      name="twitter:description"
+      content="Interactive global map of Köppen-Geiger climate zones from 1901–2099 with historical periods and CMIP6 SSP projections."
+    />
+    <meta
+      name="twitter:image"
+      content="https://dropbop.github.io/koppen/og-image.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Preview of the Köppen-Geiger Interactive Map"
+    />
+
+    <link rel="icon" href="/koppen/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/koppen/favicon-16.png"
+      sizes="16x16"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/koppen/favicon-32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/koppen/favicon-48.png"
+      sizes="48x48"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/koppen/favicon-192.png"
+      sizes="192x192"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/koppen/favicon-512.png"
+      sizes="512x512"
+    />
+    <link rel="apple-touch-icon" href="/koppen/favicon-180.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://dropbop.github.io/koppen/#website",
+            "url": "https://dropbop.github.io/koppen/",
+            "name": "Köppen-Geiger Interactive Map",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://dropbop.github.io/koppen/#webpage",
+            "url": "https://dropbop.github.io/koppen/",
+            "name": "Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections",
+            "description": "Interactive global Köppen-Geiger climate classification map with historical periods from 1901–2020 and CMIP6 projections through 2099.",
+            "isPartOf": {
+              "@id": "https://dropbop.github.io/koppen/#website"
+            },
+            "about": {
+              "@id": "https://dropbop.github.io/koppen/#app"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://dropbop.github.io/koppen/og-image.png"
+            },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://dropbop.github.io/koppen/#app",
+            "name": "Köppen-Geiger Interactive Map",
+            "url": "https://dropbop.github.io/koppen/",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript and a modern web browser",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "image": "https://dropbop.github.io/koppen/og-image.png",
+            "description": "Browser-based interactive atlas for exploring global Köppen-Geiger climate zones across historical periods and CMIP6 future scenarios.",
+            "featureList": [
+              "Historical climate periods from 1901–1930 through 1991–2020",
+              "Future climate windows for 2041–2070 and 2071–2099",
+              "CMIP6 shared socioeconomic pathway scenarios",
+              "Clickable map inspection by location",
+              "Climate-zone group toggles and opacity controls",
+              "Basemap switching"
+            ],
+            "isBasedOn": {
+              "@id": "https://dropbop.github.io/koppen/#dataset"
+            }
+          },
+          {
+            "@type": "Dataset",
+            "@id": "https://dropbop.github.io/koppen/#dataset",
+            "name": "High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections",
+            "description": "High-resolution global Köppen-Geiger climate classification maps for historical and future periods.",
+            "creator": [
+              { "@type": "Person", "name": "Hylke E. Beck" },
+              { "@type": "Person", "name": "Tim R. McVicar" },
+              { "@type": "Person", "name": "Noemi Vergopolan" },
+              { "@type": "Person", "name": "Alexis Berg" },
+              { "@type": "Person", "name": "Nicholas J. Lutsko" },
+              { "@type": "Person", "name": "Ambroise Dufour" },
+              { "@type": "Person", "name": "Zhenzhong Zeng" },
+              { "@type": "Person", "name": "Xin Jiang" },
+              { "@type": "Person", "name": "Albert I. J. M. van Dijk" },
+              { "@type": "Person", "name": "Diego G. Miralles" }
+            ],
+            "datePublished": "2023",
+            "identifier": "https://doi.org/10.1038/s41597-023-02549-6",
+            "license": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        ]
+      }
+    </script>
+
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      .about-map {
+        background: #f5efe2;
+        color: #1f1f1b;
+        border-top: 1px solid rgba(31, 31, 27, 0.12);
+      }
+
+      .about-map__inner {
+        max-width: 58rem;
+        margin: 0 auto;
+        padding: 1.1rem 1.25rem 1.6rem;
+      }
+
+      .about-map__eyebrow {
+        margin: 0 0 0.35rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.75;
+      }
+
+      .about-map h1,
+      .about-map h2,
+      .about-map p,
+      .about-map summary,
+      .about-map li,
+      .about-map a {
+        font-family: "Source Serif 4", serif;
+      }
+
+      .about-map h1 {
+        margin: 0;
+        font-size: clamp(1.15rem, 2vw, 1.45rem);
+        line-height: 1.2;
+        font-weight: 600;
+      }
+
+      .about-map p {
+        margin: 0.5rem 0 0;
+        font-size: 0.98rem;
+        line-height: 1.65;
+      }
+
+      .about-map__details {
+        margin-top: 0.9rem;
+        border-top: 1px solid rgba(31, 31, 27, 0.12);
+        padding-top: 0.75rem;
+      }
+
+      .about-map__details summary {
+        cursor: pointer;
+        font-size: 0.98rem;
+        font-weight: 600;
+        list-style-position: outside;
+      }
+
+      .about-map__details[open] summary {
+        margin-bottom: 0.45rem;
+      }
+
+      .about-map__details-body {
+        max-width: 52rem;
+      }
+
+      .about-map__meta {
+        color: rgba(31, 31, 27, 0.82);
+      }
+
+      .about-map a {
+        color: inherit;
+      }
+
+      @media (max-width: 640px) {
+        .about-map__inner {
+          padding: 1rem 1rem 1.4rem;
+        }
+      }
+    </style>
+
+    <script type="module" crossorigin src="/koppen/assets/index-DA9nAh3y.js"></script>
+    <link rel="stylesheet" crossorigin href="/koppen/assets/index-BqOIvHTM.css">
+  </head>
+  <body>
+    <div id="app">
+      <noscript>
+        <section>
+          <h1>Köppen-Geiger Interactive Map</h1>
+          <p>
+            This app needs JavaScript to load the interactive climate map,
+            switch periods and scenarios, and inspect climate classes by
+            location.
+          </p>
+          <p>
+            The map covers global Köppen-Geiger climate classification zones
+            from 1901 through 2099, including historical periods from 1901–1930
+            through 1991–2020 and projected 2041–2070 and 2071–2099 climates
+            under multiple CMIP6 SSP scenarios.
+          </p>
+          <p>
+            Climate data is based on
+            <a href="https://doi.org/10.1038/s41597-023-02549-6">
+              Beck et al. (2023), High-resolution (1 km) Köppen-Geiger maps for
+              1901–2099 based on constrained CMIP6 projections
+            </a>
+            in <em>Scientific Data</em>.
+          </p>
+        </section>
+      </noscript>
+
+      <div id="map" class="map"></div>
+      <aside id="sidebar"></aside>
+      <div id="basemap-toggle"></div>
+      <div id="popup"></div>
+      <div id="loading" class="loading-screen is-hidden">
+        <div class="loading-card">
+          <div class="loading-spinner"></div>
+          <span>Loading climate map</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="about-map" aria-labelledby="page-title">
+      <div class="about-map__inner">
+        <p class="about-map__eyebrow">Interactive climate classification atlas</p>
+        <h1 id="page-title">Köppen-Geiger Interactive Map</h1>
+        <p>
+          Explore global Köppen-Geiger climate zones across historical periods
+          from 1901–2020 and CMIP6 projections through 2099, with scenario
+          switching, basemap controls, and click-to-inspect location details.
+        </p>
+
+        <details class="about-map__details">
+          <summary>About the data and map coverage</summary>
+          <div class="about-map__details-body">
+            <p>
+              The map includes the 1901–1930, 1931–1960, 1961–1990, and
+              1991–2020 historical periods, plus projected 2041–2070 and
+              2071–2099 climates under SSP1-1.9, SSP1-2.6, SSP2-4.5, SSP3-7.0,
+              SSP4-3.4, SSP4-6.0, and SSP5-8.5.
+            </p>
+            <p class="about-map__meta">
+              Climate data is based on
+              <a href="https://doi.org/10.1038/s41597-023-02549-6">
+                Beck et al. (2023), High-resolution (1 km) Köppen-Geiger maps
+                for 1901–2099 based on constrained CMIP6 projections
+              </a>.
+              Approximate place names are provided via OpenStreetMap Nominatim
+              reverse geocoding.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </body>
+</html>
