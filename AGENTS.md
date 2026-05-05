@@ -60,7 +60,7 @@ Data tooling lives in `scripts/`. `scripts/periods.ts` is the source of truth fo
 - `pnpm format`: format files with Prettier.
 - `pnpm prepare-data`: regenerate inventory, COGs, zones, and manifest. Requires GDAL tools and local raw TIFFs.
 
-Use `BASE_PATH=/your-repo-name/ pnpm build` when building for a GitHub Pages path other than `/koppen/`.
+The default build targets the custom-domain root path at `https://koppenmap.com/`. Use `BASE_PATH=/your-repo-name/ pnpm build` when building for a GitHub Pages project path.
 
 ## Coding Style & Naming Conventions
 

@@ -17,7 +17,7 @@ pnpm dev
 
 The beta repo includes web-ready data in `public/data/`, so GDAL is not required for normal development or GitHub Pages deployment.
 
-The Vite config currently uses `base: '/koppen/'`, matching this folder/repo name. For a different GitHub Pages project path, set `BASE_PATH` when building:
+The Vite config defaults to `base: '/'` for the custom-domain deployment at `https://koppenmap.com/`. For a GitHub Pages project path, set `BASE_PATH` when building:
 
 ```bash
 BASE_PATH=/your-repo-name/ pnpm build
@@ -71,7 +71,7 @@ Use the existing `0p1` source files unless there is a deliberate reason to ship 
 
 ## Deployment
 
-The included GitHub Actions workflow builds the static site and deploys it to GitHub Pages on pushes to `main`. If generated COGs remain small, they can be committed directly. If future data pushes the generated assets above roughly 50 MB total, switch to Git LFS or publish data as release assets.
+The included GitHub Actions workflow builds the static site and deploys it to GitHub Pages on pushes to `main`. The production custom domain is `koppenmap.com`, with `www.koppenmap.com` expected to redirect to the apex domain through GitHub Pages. If generated COGs remain small, they can be committed directly. If future data pushes the generated assets above roughly 50 MB total, switch to Git LFS or publish data as release assets.
 
 ## Future Work
 
