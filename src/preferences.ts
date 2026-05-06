@@ -78,7 +78,7 @@ let pendingState: Readonly<AppState> | null = null;
 export function schedulePersist(state: Readonly<AppState>): void {
   pendingState = state;
   if (pendingPersistTimer !== undefined) {
-    return;
+    window.clearTimeout(pendingPersistTimer);
   }
   pendingPersistTimer = window.setTimeout(() => {
     pendingPersistTimer = undefined;

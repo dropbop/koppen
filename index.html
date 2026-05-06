@@ -88,17 +88,17 @@
          Only the JSON manifests are preloaded: COGs are fetched via HTTP byte-range
          requests by OpenLayers' GeoTIFF source, and `<link rel="preload" as="fetch">`
          would force a full-file download that breaks the range-request handshake.
-         Absolute paths assume the custom-domain build (base: '/'); adjust for BASE_PATH-style project deploys. -->
+         Paths use %BASE_URL% so BASE_PATH project-page builds resolve correctly. -->
     <link
       rel="preload"
       as="fetch"
-      href="/data/manifest.json"
+      href="%BASE_URL%data/manifest.json"
       crossorigin="anonymous"
     />
     <link
       rel="preload"
       as="fetch"
-      href="/data/zones.json"
+      href="%BASE_URL%data/zones.json"
       crossorigin="anonymous"
     />
 
