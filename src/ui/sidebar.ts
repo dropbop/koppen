@@ -187,12 +187,65 @@ function render(
   }
 }
 
+type SurgicalState = {
+  visibleZones: Set<number>;
+  period: string;
+  sidebarOpen: boolean;
+  opacity: number;
+};
+
+function applyUpdates(
+  target: HTMLElement,
+  grouped: Map<string, Zone[]>,
+  state: SurgicalState,
+): void {
+  target.className = `sidebar ${state.sidebarOpen ? 'is-open' : 'is-collapsed'}`;
+
+  const toggleButton = target.querySelector<HTMLButtonElement>(
+    '.sidebar-toggle',
+  );
+  if (toggleButton) {
+    toggleButton.textContent = state.sidebarOpen ? 'Hide' : 'Show';
+  }
+  for (const button of target.querySelectorAll<HTMLElement>(
+    '[aria-controls="sidebar-controls"]',
+  )) {
+    button.setAttribute('aria-expanded', String(state.sidebarOpen));
+  }
+
+  const select = target.querySelector<HTMLSelectElement>('#period-select');
+  if (select) {
+    select.value = state.period;
+  }
+
+  for (const checkbox of target.querySelectorAll<HTMLInputElement>(
+    'input[data-zone]',
+  )) {
+    const value = Number(checkbox.dataset.zone);
+    checkbox.checked = state.visibleZones.has(value);
+  }
+
+  for (const checkbox of target.querySelectorAll<HTMLInputElement>(
+    'input[data-group]',
+  )) {
+    const group = grouped.get(checkbox.dataset.group ?? '');
+    if (!group) {
+      continue;
+    }
+    checkbox.checked = isGroupChecked(group, state.visibleZones);
+    checkbox.indeterminate = isGroupIndeterminate(group, state.visibleZones);
+  }
+
+  updateOpacity(target, state.opacity);
+}
+
 export function mountSidebar(
   target: HTMLElement,
   manifest: Manifest,
   zonesByValue: ZonesByValue,
 ): void {
   const zones = zoneList(zonesByValue);
+  const grouped = groupZones(zones);
   target.className = 'sidebar';
 
   target.addEventListener('input', (event) => {
@@ -258,20 +311,10 @@ export function mountSidebar(
     }
   });
 
-  let lastRender: {
-    period: string;
-    visibleZones: Set<number>;
-    sidebarOpen: boolean;
-  } | null = null;
+  let mounted = false;
 
   subscribe((state) => {
-    const needsFullRender =
-      !lastRender ||
-      lastRender.period !== state.period ||
-      lastRender.visibleZones !== state.visibleZones ||
-      lastRender.sidebarOpen !== state.sidebarOpen;
-
-    if (needsFullRender) {
+    if (!mounted) {
       render(
         target,
         manifest,
@@ -281,13 +324,9 @@ export function mountSidebar(
         state.opacity,
         state.sidebarOpen,
       );
-      lastRender = {
-        period: state.period,
-        visibleZones: state.visibleZones,
-        sidebarOpen: state.sidebarOpen,
-      };
-    } else {
-      updateOpacity(target, state.opacity);
+      mounted = true;
+      return;
     }
+    applyUpdates(target, grouped, state);
   });
 }
