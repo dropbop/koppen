@@ -7,7 +7,7 @@ import { fromLonLat } from 'ol/proj';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type Source from 'ol/source/Source';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
-import { MAX_MAP_PIXEL_RATIO, ZOOM_ANIMATION_DURATION_MS } from '@/config';
+import { MAX_MAP_PIXEL_RATIO } from '@/config';
 import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
 import type { Manifest, ZonesByValue } from '@/data/zones';
@@ -139,7 +139,6 @@ export function mountMap(
     interactions: defaultInteractions({
       altShiftDragRotate: false,
       pinchRotate: false,
-      zoomDuration: ZOOM_ANIMATION_DURATION_MS,
     }),
     view: new View({
       center: fromLonLat([0, 18]),
