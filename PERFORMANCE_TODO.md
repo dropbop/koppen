@@ -42,7 +42,7 @@ Rank combines likely performance impact, implementation difficulty, bug risk, an
 | Rank | Idea | Helps | Expected boost | Difficulty | Bug risk | Notes |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | Use immediate click handling instead of `singleclick` for popup display | Popup delay | High | Low-medium | Medium | Completed in `src/map/map.ts`; user-tested result is much snappier. |
-| 2 | Cap map render pixel ratio | Pan and zoom smoothness | High on high-DPI/mobile/4K | Low | Low | Implemented with `MAX_MAP_PIXEL_RATIO = 1.5`; needs manual sharpness vs smoothness check. |
+| 2 | Cap map render pixel ratio | Pan and zoom smoothness | High on high-DPI/mobile/4K | Low | Low | Implemented with `MAX_MAP_PIXEL_RATIO = 1.5`; user-tested result is a bit smoother. |
 | 3 | Cache whole COG files or allow full-file reads | Period switch and edge loading | High | Medium | Medium | Current COGs are only about 310-327 KiB each, so many range reads may cost more than whole-file fetch/decode. |
 | 4 | Idle-prefetch likely/all period COGs after initial load | Period switch | High after warmup | Low-medium | Low-medium | Total committed COG payload is about 5.6 MiB. Gate for connection quality if needed. |
 | 5 | Tune tile and GeoTIFF caches/loading | Edge loading and zoom | Medium-high | Low-medium | Medium | Test `maxTilesLoading`, `WebGLTile cacheSize`, `preload`, and GeoTIFF `sourceOptions.cacheSize`. Watch memory. |
@@ -80,4 +80,5 @@ Add dated entries here as experiments are run.
 | Date | Branch/SHA | Device/browser | Experiment | Result | Decision |
 | --- | --- | --- | --- | --- | --- |
 | 2026-05-06 | `codex/performance-strategies` | User manual test | Immediate popup on OpenLayers `click` instead of delayed `singleclick` | Popup feels much snappier | Keep change; move to pan/zoom smoothness next. |
-| 2026-05-06 | `codex/performance-strategies` | Pending manual test | Cap OpenLayers map render pixel ratio at `1.5` | TBD | Compare pan/zoom smoothness against any visible softness. |
+| 2026-05-06 | `codex/performance-strategies` | User manual test | Cap OpenLayers map render pixel ratio at `1.5` | Pan/zoom feels a bit smoother | Keep for now; continue tuning zoom feel. |
+| 2026-05-06 | `codex/performance-strategies` | Pending manual test | Shorten OpenLayers default zoom animation to `150 ms` and disable pinch/Alt+Shift rotation | TBD | Verify wheel, trackpad, pinch, double-click zoom, popup clicks, and panning feel. |

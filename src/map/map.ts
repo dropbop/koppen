@@ -2,11 +2,12 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { unByKey } from 'ol/Observable';
 import { defaults as defaultControls } from 'ol/control/defaults';
+import { defaults as defaultInteractions } from 'ol/interaction/defaults';
 import { fromLonLat } from 'ol/proj';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type Source from 'ol/source/Source';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
-import { MAX_MAP_PIXEL_RATIO } from '@/config';
+import { MAX_MAP_PIXEL_RATIO, ZOOM_ANIMATION_DURATION_MS } from '@/config';
 import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
 import type { Manifest, ZonesByValue } from '@/data/zones';
@@ -135,11 +136,17 @@ export function mountMap(
     pixelRatio: Math.min(window.devicePixelRatio, MAX_MAP_PIXEL_RATIO),
     layers: [basemaps.plain, basemaps.satellite, climateLayer, clickMarkerLayer],
     controls: defaultControls(),
+    interactions: defaultInteractions({
+      altShiftDragRotate: false,
+      pinchRotate: false,
+      zoomDuration: ZOOM_ANIMATION_DURATION_MS,
+    }),
     view: new View({
       center: fromLonLat([0, 18]),
       zoom: 2,
       minZoom: 1.4,
       maxZoom: 9,
+      enableRotation: false,
     }),
   });
 
