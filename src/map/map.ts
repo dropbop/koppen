@@ -21,9 +21,9 @@ import { resolveAssetUrl } from '@/data/zones';
 import { reverseGeocode } from '@/data/reverse-geocode';
 import { createBasemapLayers } from './basemaps';
 import {
+  applyZoneVisibility,
   createClimateLayer,
   createGeoTiffSource,
-  setClimateLayerStyle,
 } from './climate-layer';
 import { createClickMarkerLayer, setClickMarker } from './click-marker';
 import { readClickedZone } from './click-query';
@@ -179,7 +179,7 @@ export function mountMap(
     climateLayer.setOpacity(state.opacity);
 
     if (state.visibleZones !== renderedVisibleZones) {
-      setClimateLayerStyle(climateLayer, zones, state.visibleZones);
+      applyZoneVisibility(climateLayer, zones, state.visibleZones);
       renderedVisibleZones = state.visibleZones;
     }
 
