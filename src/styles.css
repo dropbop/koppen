@@ -810,6 +810,8 @@ input[type='range'] {
 }
 
 .about-map {
+  position: relative;
+  z-index: 1;
   background: var(--paper);
   color: var(--ink);
   border-top: 1px solid rgba(43, 38, 32, 0.12);
@@ -821,7 +823,7 @@ input[type='range'] {
   padding: 1.1rem 1.25rem 1.6rem;
 }
 
-.about-map__eyebrow {
+.about-map .about-map__eyebrow {
   margin: 0 0 0.35rem;
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
     monospace;
