@@ -76,10 +76,12 @@ Timing and ownership: run this section after most P0/P1 improvements are in plac
 ## P1 — Performance
 
 - [ ] Confirm gzip/brotli is being served for the 611 KiB main bundle. Should compress to ~180 KiB on the wire.
-- [ ] Profile the climate-layer style rebuild on group-toggle. With "All"/"None" hitting up to 13 zones in succession via individual `setState` calls, that's potentially 13 WebGL style recompiles. If it stutters, switch to style variables (uniforms) so the shader compiles once.
-- [ ] Investigate `manualChunks` in `vite.config.ts` to split OL out as a separate cache-friendly chunk.
+- [x] **Profile the climate-layer style rebuild on group-toggle.** Validated result: switched zone visibility to WebGL style-variable uniforms, so individual checkbox toggles and All/None call `WebGLTileLayer#updateStyleVariables` instead of `setStyle` and avoid shader recompiles entirely.
+- [x] **Investigate `manualChunks` in `vite.config.ts` to split OL out as a separate cache-friendly chunk.** Validated result: `manualChunks: { ol: ['ol'] }` produces a stable `ol-*.js` chunk (~276 KiB / ~80 KiB gzip) separate from the app chunk (~436 KiB / ~152 KiB gzip), and the >500 KiB chunk warning is gone.
 - [ ] Keep old climate layer visible (or fade out) while new period loads, instead of going blank.
 - [ ] Run a Lighthouse pass — captures SEO, performance, and a11y findings in one shot.
+- [x] **Debounce preferences persistence across rapid `setState` (opacity slider drag).** Validated result: `schedulePersist` in `src/preferences.ts` coalesces writes into a 200ms trailing-edge timer; `flushPendingPersist` runs on `pagehide` and `visibilitychange === 'hidden'` so a tab close mid-drag still saves the latest value.
+- [x] **Preload critical app data so it fetches in parallel with the JS bundle.** Validated result: `index.html` now preloads `data/manifest.json` and `data/zones.json` via `<link rel="preload" as="fetch" crossorigin>`. COGs are intentionally excluded — `as="fetch"` forces a full-file download that breaks OL's range-request COG decode.
 
 ## P1 — Repo hygiene before going public
 

@@ -65,6 +65,7 @@ export function createClimateLayer(
   });
 }
 
+// Patches WebGL uniforms in place; `setStyle` would force a shader recompile on every toggle.
 export function applyZoneVisibility(
   layer: WebGLTileLayer,
   zones: ZonesByValue,
