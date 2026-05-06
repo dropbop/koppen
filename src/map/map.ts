@@ -3,8 +3,10 @@ import View from 'ol/View';
 import { unByKey } from 'ol/Observable';
 import { defaults as defaultControls } from 'ol/control/defaults';
 import { fromLonLat } from 'ol/proj';
+import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type Source from 'ol/source/Source';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
+import { MAX_MAP_PIXEL_RATIO } from '@/config';
 import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
 import type { Manifest, ZonesByValue } from '@/data/zones';
@@ -60,6 +62,54 @@ function isAbortError(error: unknown): boolean {
   return error instanceof DOMException && error.name === 'AbortError';
 }
 
+function showPopupForClick(
+  event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>,
+  climateLayer: WebGLTileLayer,
+  zones: ZonesByValue,
+): void {
+  const result = readClickedZone(event, climateLayer, zones);
+  if (!result) {
+    setState({ popup: null });
+    return;
+  }
+
+  setState({ popup: { ...result, placeStatus: 'loading' } });
+  void reverseGeocode(result.lon, result.lat)
+    .then((placeName) => {
+      const currentPopup = getState().popup;
+      if (
+        !currentPopup ||
+        currentPopup.lon !== result.lon ||
+        currentPopup.lat !== result.lat ||
+        currentPopup.classValue !== result.classValue
+      ) {
+        return;
+      }
+      setState({
+        popup: {
+          ...currentPopup,
+          placeName: placeName ?? undefined,
+          placeStatus: 'ready',
+        },
+      });
+    })
+    .catch((error: unknown) => {
+      if (isAbortError(error)) {
+        return;
+      }
+      const currentPopup = getState().popup;
+      if (
+        !currentPopup ||
+        currentPopup.lon !== result.lon ||
+        currentPopup.lat !== result.lat ||
+        currentPopup.classValue !== result.classValue
+      ) {
+        return;
+      }
+      setState({ popup: { ...currentPopup, placeStatus: 'error' } });
+    });
+}
+
 export function mountMap(
   target: HTMLElement,
   manifest: Manifest,
@@ -82,6 +132,7 @@ export function mountMap(
 
   const map = new Map({
     target,
+    pixelRatio: Math.min(window.devicePixelRatio, MAX_MAP_PIXEL_RATIO),
     layers: [basemaps.plain, basemaps.satellite, climateLayer, clickMarkerLayer],
     controls: defaultControls(),
     view: new View({
@@ -92,48 +143,12 @@ export function mountMap(
     }),
   });
 
-  map.on('singleclick', (event) => {
-    const result = readClickedZone(event, climateLayer, zones);
-    if (!result) {
-      setState({ popup: null });
-      return;
-    }
+  map.on('click', (event) => {
+    showPopupForClick(event, climateLayer, zones);
+  });
 
-    setState({ popup: { ...result, placeStatus: 'loading' } });
-    void reverseGeocode(result.lon, result.lat)
-      .then((placeName) => {
-        const currentPopup = getState().popup;
-        if (
-          !currentPopup ||
-          currentPopup.lon !== result.lon ||
-          currentPopup.lat !== result.lat ||
-          currentPopup.classValue !== result.classValue
-        ) {
-          return;
-        }
-        setState({
-          popup: {
-            ...currentPopup,
-            placeName: placeName ?? undefined,
-            placeStatus: 'ready',
-          },
-        });
-      })
-      .catch((error: unknown) => {
-        if (isAbortError(error)) {
-          return;
-        }
-        const currentPopup = getState().popup;
-        if (
-          !currentPopup ||
-          currentPopup.lon !== result.lon ||
-          currentPopup.lat !== result.lat ||
-          currentPopup.classValue !== result.classValue
-        ) {
-          return;
-        }
-        setState({ popup: { ...currentPopup, placeStatus: 'error' } });
-      });
+  map.on('dblclick', () => {
+    setState({ popup: null });
   });
 
   subscribe((state) => {
