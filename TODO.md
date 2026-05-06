@@ -68,7 +68,7 @@ Timing and ownership: run this section after most P0/P1 improvements are in plac
 
 - [ ] Run WebAIM contrast check on `--ink-muted` (`#76695c` on `#f5efe2`). Adjust if below AA at small sizes.
 - [ ] Add `aria-live="polite"` region for popup announcements.
-- [ ] Don't full-`innerHTML`-rewrite the sidebar on every state change — preserves keyboard focus during checkbox interaction.
+- [x] **Don't full-`innerHTML`-rewrite the sidebar on every state change.** Sidebar now renders once, then `applyUpdates` mutates `.checked` / `.indeterminate` / `.value` / `className` / `aria-expanded` / `textContent` directly. Preserves scroll position and keyboard focus across checkbox toggles. Same fix as P1 perf rank 10.
 - [ ] Add `role="group"` to the basemap toggle wrapper.
 - [ ] Verify keyboard navigation through sidebar checklist works smoothly.
 - [ ] Verify visible focus rings on all interactive elements.
@@ -131,7 +131,7 @@ Rank combines likely performance impact, implementation difficulty, bug risk, an
 | 7 | Reduce compositor-heavy UI styles over the map | Pan and zoom smoothness | Medium | Low | Low | Test removing/reducing `backdrop-filter`, large shadows, and translucent fixed panels, especially on mobile. Needs visual review. |
 | 8 | Cache whole COG files or allow full-file reads | Period switch and edge loading | High | Medium | Medium | Current COGs are only about 310-327 KiB each, so many range reads may cost more than whole-file fetch/decode. Broader than the smallest polish fixes. |
 | 9 | Keep old climate layer visible until new period is ready | Perceived period switching | Medium-high perceived | Medium | Medium | Does not reduce raw load time by itself, but avoids blank/partial transitions. |
-| 10 | Avoid full sidebar `innerHTML` rerenders for routine interactions | Zone filtering and keyboard feel | Low-medium | Medium | Medium | Also helps accessibility by preserving focus. |
+| 10 | ~~Avoid full sidebar `innerHTML` rerenders for routine interactions~~ | Zone filtering and keyboard feel | Low-medium | Medium | Medium | Done — sidebar renders once on mount, then surgical attribute updates only. Also fixes scroll-jump and focus loss. |
 | 11 | Split OpenLayers into a separate production chunk | Initial and repeat loads | Low-medium | Low | Low | Helps caching and parse attribution, but does not solve runtime smoothness. |
 | 12 | Use a lighter basemap strategy | Edge loading | Medium | Medium | Medium | External basemap latency is independent from climate layer performance. |
 | 13 | Generate dedicated web map tiles or PMTiles instead of runtime COG decoding | All raster interactions | Potentially high | High | High | Data-pipeline rewrite; only pursue if smaller changes fail. |
