@@ -3,11 +3,17 @@ import View from 'ol/View';
 import { unByKey } from 'ol/Observable';
 import { defaults as defaultControls } from 'ol/control/defaults';
 import { defaults as defaultInteractions } from 'ol/interaction/defaults';
+import MouseWheelZoom from 'ol/interaction/MouseWheelZoom';
 import { fromLonLat } from 'ol/proj';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type Source from 'ol/source/Source';
 import type WebGLTileLayer from 'ol/layer/WebGLTile';
-import { MAX_MAP_PIXEL_RATIO } from '@/config';
+import {
+  MAX_MAP_PIXEL_RATIO,
+  MOUSE_WHEEL_ZOOM_DURATION_MS,
+  MOUSE_WHEEL_ZOOM_MAX_DELTA,
+  MOUSE_WHEEL_ZOOM_TIMEOUT_MS,
+} from '@/config';
 import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
 import type { Manifest, ZonesByValue } from '@/data/zones';
@@ -130,16 +136,26 @@ export function mountMap(
   let renderedPeriod = manifest.defaultPeriod;
   let renderedVisibleZones = initialVisibleZones;
   let renderedMarkerCoord: [number, number] | null = null;
+  const interactions = defaultInteractions({
+    altShiftDragRotate: false,
+    mouseWheelZoom: false,
+    pinchRotate: false,
+  });
+  interactions.push(
+    new MouseWheelZoom({
+      constrainResolution: false,
+      duration: MOUSE_WHEEL_ZOOM_DURATION_MS,
+      maxDelta: MOUSE_WHEEL_ZOOM_MAX_DELTA,
+      timeout: MOUSE_WHEEL_ZOOM_TIMEOUT_MS,
+    }),
+  );
 
   const map = new Map({
     target,
     pixelRatio: Math.min(window.devicePixelRatio, MAX_MAP_PIXEL_RATIO),
     layers: [basemaps.plain, basemaps.satellite, climateLayer, clickMarkerLayer],
     controls: defaultControls(),
-    interactions: defaultInteractions({
-      altShiftDragRotate: false,
-      pinchRotate: false,
-    }),
+    interactions,
     view: new View({
       center: fromLonLat([0, 18]),
       zoom: 2,
