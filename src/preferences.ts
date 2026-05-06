@@ -70,3 +70,34 @@ export function persistPreferences(state: Readonly<AppState>): void {
     // Preferences are progressive enhancement; private browsing failures are safe.
   }
 }
+
+const PERSIST_DEBOUNCE_MS = 200;
+let pendingPersistTimer: number | undefined;
+let pendingState: Readonly<AppState> | null = null;
+
+export function schedulePersist(state: Readonly<AppState>): void {
+  pendingState = state;
+  if (pendingPersistTimer !== undefined) {
+    return;
+  }
+  pendingPersistTimer = window.setTimeout(() => {
+    pendingPersistTimer = undefined;
+    const next = pendingState;
+    pendingState = null;
+    if (next) {
+      persistPreferences(next);
+    }
+  }, PERSIST_DEBOUNCE_MS);
+}
+
+export function flushPendingPersist(): void {
+  if (pendingPersistTimer !== undefined) {
+    window.clearTimeout(pendingPersistTimer);
+    pendingPersistTimer = undefined;
+  }
+  const next = pendingState;
+  pendingState = null;
+  if (next) {
+    persistPreferences(next);
+  }
+}

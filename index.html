@@ -84,6 +84,24 @@
     />
     <link rel="apple-touch-icon" href="%BASE_URL%favicon-180.png" />
 
+    <!-- Preload critical app data so the browser fetches in parallel with the JS bundle.
+         Only the JSON manifests are preloaded: COGs are fetched via HTTP byte-range
+         requests by OpenLayers' GeoTIFF source, and `<link rel="preload" as="fetch">`
+         would force a full-file download that breaks the range-request handshake.
+         Absolute paths assume the custom-domain build (base: '/'); adjust for BASE_PATH-style project deploys. -->
+    <link
+      rel="preload"
+      as="fetch"
+      href="/data/manifest.json"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="fetch"
+      href="/data/zones.json"
+      crossorigin="anonymous"
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

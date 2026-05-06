@@ -7,7 +7,11 @@ import { mountMap, whenSourceReady } from '@/map/map';
 import { mountBasemapToggle } from '@/ui/basemap-toggle';
 import { mountPopup } from '@/ui/popup';
 import { mountSidebar } from '@/ui/sidebar';
-import { loadPreferences, persistPreferences } from '@/preferences';
+import {
+  flushPendingPersist,
+  loadPreferences,
+  schedulePersist,
+} from '@/preferences';
 
 function requiredElement<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -45,10 +49,17 @@ async function main(): Promise<void> {
     mountSidebar(sidebarTarget, manifest, zones);
     mountBasemapToggle(basemapTarget);
     mountPopup(popupTarget, controller.map, zones);
+    window.addEventListener('pagehide', flushPendingPersist);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        flushPendingPersist();
+      }
+    });
+
     let loadingTimer: number | undefined;
     subscribe((state) => {
       document.body.classList.toggle('sidebar-open', state.sidebarOpen);
-      persistPreferences(state);
+      schedulePersist(state);
 
       if (state.loading) {
         if (
