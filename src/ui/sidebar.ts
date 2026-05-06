@@ -127,7 +127,7 @@ function render(
         <div class="sidebar-title-row">
           <div>
             <p class="eyebrow">Köppen-Geiger · Beck V3</p>
-            <h1>An Atlas of Climate</h1>
+            <h2>An Atlas of Climate</h2>
           </div>
           <div class="sidebar-actions">
             <button class="sidebar-toggle" type="button" data-action="toggle-sidebar" aria-controls="sidebar-controls" aria-expanded="${sidebarOpen}">${sidebarOpen ? 'Hide' : 'Show'}</button>
