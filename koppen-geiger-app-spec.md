@@ -214,7 +214,7 @@ On `map.on('singleclick', ...)`:
 3. If the value is 0 / out-of-range / not in zones.json → don't show popup (clicked on ocean or no-data area).
 4. Otherwise, set `state.popup = { lon, lat, classValue }`.
 
-Map projection note: OL renders in EPSG:3857 by default. The V3 GeoTIFFs are EPSG:4326. OL's `GeoTIFF` source handles reprojection transparently, but verify by testing that a click on a known location (e.g., Houston → should be Cfa) returns the right class.
+Map projection note: OL renders in EPSG:3857 by default. Source rasters in `koppen_geiger_tif/` are EPSG:4326, but `scripts/prepare-cogs.ts` reprojects them to EPSG:3857 (with nearest-neighbor resampling, since classes are categorical) so OL serves tiles without per-frame reprojection. Verify by testing that a click on a known location (e.g., Houston → should be Cfa) returns the right class.
 
 ---
 

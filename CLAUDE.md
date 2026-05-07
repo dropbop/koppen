@@ -53,7 +53,7 @@ This multi-agent coordination guidance is duplicated in `CLAUDE.md` and `AGENTS.
 - `pnpm preview` — serve the production build.
 - `pnpm lint` — ESLint over the repo.
 - `pnpm format` — Prettier write.
-- `pnpm prepare-data` — runs `inventory-data`, `prepare-cogs`, `build-zones` in order. Requires GDAL (`gdalinfo`, `gdal_translate`) and a populated `koppen_geiger_tif/` archive locally. Do not run unless the user has the raw archive — `public/data/` already ships generated outputs.
+- `pnpm prepare-data` — runs `inventory-data`, `prepare-cogs`, `build-zones` in order. Requires GDAL ≥3.1 (`gdalinfo`, `gdalwarp`, `gdal_translate`) and a populated `koppen_geiger_tif/` archive locally. `prepare-cogs` reprojects source EPSG:4326 rasters to EPSG:3857 with nearest-neighbor resampling so OL serves tiles without per-frame reprojection; any future categorical raster source must use the same convention. Do not run unless the user has the raw archive — `public/data/` already ships generated outputs.
 - `BASE_PATH=/your-repo-name/ pnpm build` — when deploying to a GitHub Pages project path. The default build targets the custom-domain root path at `https://koppenmap.com/`.
 
 There is no test runner or `pnpm test` script. Validate changes with `pnpm lint`, `pnpm build`, then manual smoke-test in `pnpm dev` (period/scenario switching, opacity, popups, basemap toggle, antimeridian wrap).
