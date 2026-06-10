@@ -1,0 +1,190 @@
+:root {
+  color-scheme: light;
+  --paper: #f5efe2;
+  --paper-card: #fbf7ed;
+  --ink: #2b2620;
+  --ink-muted: #76695c;
+  --rule: #e6dccb;
+  --rule-strong: #d8caaf;
+  --accent: #8c3a23;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 2rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+nav a {
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  padding: 0.45rem 0.65rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background: #f0d6c7;
+  border-color: var(--accent);
+}
+
+h1,
+h2,
+h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.15;
+}
+
+h1 {
+  max-width: 54rem;
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 600;
+}
+
+h2 {
+  margin: 2.4rem 0 0.75rem;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+}
+
+h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+}
+
+p,
+li,
+td,
+th {
+  line-height: 1.65;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+.eyebrow,
+.meta,
+th,
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.eyebrow {
+  margin: 0 0 0.55rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lead {
+  max-width: 54rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 1.15rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 1rem;
+}
+
+.panel p {
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-top: 1px solid var(--rule);
+  padding: 0.75rem 0.55rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--ink-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.code {
+  font-weight: 700;
+}
+
+.meta {
+  color: var(--ink-muted);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 780px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    border-top: 1px solid var(--rule);
+    padding: 0.8rem 0;
+  }
+
+  td {
+    border-top: 0;
+    padding: 0.2rem 0;
+  }
+}

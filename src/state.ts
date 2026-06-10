@@ -1,6 +1,7 @@
 import { DEFAULT_OPACITY } from '@/config';
 
 export type Basemap = 'plain' | 'satellite';
+export type ActivePanel = 'menu' | 'about' | null;
 
 export type PopupState = {
   lon: number;
@@ -18,7 +19,7 @@ export type AppState = {
   popup: PopupState | null;
   loading: boolean;
   opacity: number;
-  sidebarOpen: boolean;
+  activePanel: ActivePanel;
 };
 
 const state: AppState = {
@@ -28,7 +29,7 @@ const state: AppState = {
   popup: null,
   loading: true,
   opacity: DEFAULT_OPACITY,
-  sidebarOpen: true,
+  activePanel: 'menu',
 };
 
 const subscribers = new Set<(nextState: Readonly<AppState>) => void>();
