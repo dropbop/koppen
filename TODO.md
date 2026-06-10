@@ -50,19 +50,19 @@ Remaining P0 feature/deploy work is final DNS/HTTPS verification for `koppenmap.
 
 Existing coverage: 1440p Chrome/Firefox on Windows, Firefox on Android.
 
-Timing and ownership: run this section after most P0/P1 improvements are in place. Codex/Claude should handle repeatable desktop automation, viewport screenshots, throttled-network simulation, and mocked COG failure/loading cases when explicitly scoped. Human-owned rows below require real hardware/browser testing or subjective visual/touch review; agents should not worry about completing those unless asked to help prepare a checklist.
+Timing and ownership: run this section after most P0/P1 improvements are in place. Automated checks can cover repeatable desktop flows, viewport screenshots, throttled-network simulation, and mocked COG failure/loading cases when explicitly scoped. Human-owned rows below require real hardware/browser testing or subjective visual/touch review.
 
 - [ ] **Human-owned:** Safari desktop (macOS) — WebGL behavior, COG byte-range fetch
-- [ ] **Human-owned:** Edge desktop final check. Codex/Claude can do Chromium-family automation as a proxy, but real Edge validation should be visual.
+- [ ] **Human-owned:** Edge desktop final check. Chromium-family automation is a useful proxy, but real Edge validation should be visual.
 - [ ] **Human-owned:** iOS Safari (iPhone) — pinch zoom, sidebar bottom sheet, popup positioning, 100dvh behavior
 - [ ] **Human-owned:** iOS Chrome (still WebKit underneath)
 - [ ] **Human-owned:** Android Chrome
 - [ ] **Human-owned:** Android Samsung Internet (default for many Samsung users)
 - [ ] **Human-owned:** iPad Safari (different from iPhone Safari for layout)
-- [ ] **Agentic first pass, human final review:** Throttled network test: Chrome DevTools "Slow 3G" preset (~400 kbps, 2s RTT). Walk through full UX flow.
-- [ ] **Agentic:** Verify behavior when COG fetch fails or stalls partway — does the layer hang, error gracefully, or render empty?
-- [ ] **Agentic:** Verify behavior on period change while previous COG is still loading.
-- [ ] **Agentic first pass, human final review:** Test at 1080p, 4K, and ultrawide (3440×1440) resolutions.
+- [ ] **Automated first pass, human final review:** Throttled network test: Chrome DevTools "Slow 3G" preset (~400 kbps, 2s RTT). Walk through full UX flow.
+- [ ] **Automated:** Verify behavior when COG fetch fails or stalls partway — does the layer hang, error gracefully, or render empty?
+- [ ] **Automated:** Verify behavior on period change while previous COG is still loading.
+- [ ] **Automated first pass, human final review:** Test at 1080p, 4K, and ultrawide (3440×1440) resolutions.
 
 ## P1 — Accessibility
 
@@ -136,9 +136,9 @@ Rank combines likely performance impact, implementation difficulty, bug risk, an
 | 12 | Use a lighter basemap strategy | Edge loading | Medium | Medium | Medium | External basemap latency is independent from climate layer performance. |
 | 13 | Generate dedicated web map tiles or PMTiles instead of runtime COG decoding | All raster interactions | Potentially high | High | High | Data-pipeline rewrite; only pursue if smaller changes fail. |
 
-Current PR shortlist:
+Current performance shortlist:
 
-For this PR, prefer high-reward, low-risk, low-effort changes that are easy to isolate and revert.
+For the next performance pass, prefer high-reward, low-risk, low-effort changes that are easy to isolate and revert.
 
 1. Keep the completed immediate popup handling and pixel-ratio cap if manual testing continues to agree.
 2. Keep rotation disabled because it prevents accidental touch rotation without changing useful map behavior.
@@ -181,13 +181,15 @@ Measurement log:
 - [ ] Decide: clean up existing repo and rename, OR private dev + public `KoppenMap` fork. Recommend single repo unless there's a specific reason to split.
 - [ ] Squash or `git filter-repo` any embarrassing commit history.
 - [ ] Verify `LICENSE` is what you intend (currently MIT per the sidebar citation).
-- [ ] Confirm `.codex`, `.claude/`, and `AGENTS.md` are gitignored — they are per `.gitignore`, but double-check none have been accidentally committed in history.
+- [x] **Simplify agent guidance** — `AGENTS.md` and `CLAUDE.md` are short pointers to `README.md` and `TODO.md`, without multi-agent workflow choreography.
+- [x] **Ignore local agent/tool files** — `.codex`, `.agents/`, `.claude/`, `desktop.ini`, and root `koppen_geiger_favicon.png` are local-only and ignored.
+- [ ] Audit history for committed local tool/config files if rewriting history before public launch.
 - [ ] Audit for any committed secrets, API keys, or local paths.
 - [ ] Add `.nvmrc` with `24` for local dev consistency.
 - [ ] Add `engines` field to `package.json` (`node: ">=24"`, `pnpm: ">=10.33.2"`) to fail fast on wrong env.
 - [ ] Add `.github/dependabot.yml` for automated dep updates once public.
 - [ ] Enable GitHub's free CodeQL / security scanning on the public repo.
-- [ ] Update `AGENTS.md` to reflect the new `BASE_PATH` default once custom domain switch lands.
+- [ ] Keep `AGENTS.md` aligned with `README.md` when commands, build defaults, or validation expectations change.
 - [ ] Bump `package.json` version from `0.1.0` → `0.8.0` for staging, then `1.0.0` at launch.
 - [ ] Start a `CHANGELOG.md`.
 
@@ -196,6 +198,7 @@ Measurement log:
 - [ ] **Permalinks** — encode `period`, `visibleZones`, map center, zoom in URL params. Single biggest feature for shareability ("look at climate change in 2099" with a pre-loaded view).
 - [ ] **About / methodology blurb** in sidebar, separate from the citation collapse. One-paragraph "what am I looking at" for first-time visitors.
 - [x] **Multi-favicon sizes** — 16, 32, 48, 192, 512 px PNGs for various contexts.
+- [ ] **Canonical SVG favicon source** — create and track an SVG master, then regenerate `public/favicon.ico` and PNG favicon sizes from that source.
 - [ ] **Print stylesheet** — people do print maps.
 - [ ] **Privacy-friendly analytics** (Plausible, Umami, or skip).
 - [ ] **JSON-LD structured data** — `WebApplication` or `Dataset` block for SEO.

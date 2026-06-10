@@ -5,7 +5,14 @@ dist/
 
 koppen_geiger_tif/
 
-# Local-only favicon master (regenerate favicons from this with ffmpeg)
+# Local agent/tool state
+.codex
+.agents/
+.claude/
+desktop.ini
+
+# Local-only favicon masters (regenerate favicons from these)
+koppen_geiger_favicon.png
 public/koppen_geiger_favicon.png
 
 *.log

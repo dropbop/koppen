@@ -1,3 +1,7 @@
+# Historical Build Spec
+
+This file is archived for context only. It reflects the original build plan and may be stale. Current project guidance lives in `README.md`, `TODO.md`, and `AGENTS.md`.
+
 # Köppen-Geiger Interactive Map — Build Spec
 
 ## 1. Goal
