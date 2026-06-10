@@ -23,7 +23,7 @@ Keep the primary checkout for one active session only, or for human use. If anot
 - `pnpm build`: typecheck and build the static site.
 - `pnpm preview`: serve the production build locally.
 - `pnpm format`: format files with Prettier.
-- `pnpm prepare-data`: regenerate inventory, COGs, zones, and manifest. Requires GDAL tools and local raw TIFFs; not needed for normal UI or docs work.
+- `pnpm prepare-data`: regenerate inventory, EPSG:3857 COGs, zones, and manifest. Requires GDAL 3.1+ (`gdalinfo`, `gdalwarp`, `gdal_translate`) and local raw TIFFs; not needed for normal UI or docs work.
 
 The default build targets `https://koppenmap.com/`. Use `BASE_PATH=/your-repo-name/ pnpm build` only for a GitHub Pages project path.
 
