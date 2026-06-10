@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | Köppen-Geiger Climate Map</title>
+    <meta
+      name="description"
+      content="About koppenmap.com, an interactive Köppen-Geiger climate map for exploring historical climate zones and future CMIP6/SSP projections."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://koppenmap.com/about/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://koppenmap.com/about/" />
+    <meta property="og:title" content="About | Köppen-Geiger Climate Map" />
+    <meta
+      property="og:description"
+      content="koppenmap.com is an interactive Köppen-Geiger climate map for exploring historical and projected climate zones by place."
+    />
+    <meta property="og:image" content="https://koppenmap.com/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://koppenmap.com/og-image.png" />
+    <link rel="stylesheet" href="../seo-static.css" />
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Site">
+        <a href="/">Map</a>
+        <a href="/data/">Data</a>
+        <a href="/climate-classes/">Climate classes</a>
+      </nav>
+
+      <p class="eyebrow">About the project</p>
+      <h1>About the Köppen-Geiger Climate Map</h1>
+      <p class="lead">
+        koppenmap.com is a static, browser-based map for exploring Köppen-Geiger
+        climate zones across historical periods and future CMIP6/SSP scenarios.
+        The goal is to make the climate classification layers easy to inspect by
+        place without hiding the map behind an article or a heavy application
+        framework.
+      </p>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>What the App Does</h2>
+          <p>
+            The app lets you switch between historical and projected climate
+            layers, toggle climate classes, change the map opacity, choose a
+            basemap, and click locations to see a plain-English class
+            explanation.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Why It Exists</h2>
+          <p>
+            Köppen-Geiger climate maps are often shared as static images. This
+            site keeps the map itself as the main experience while adding enough
+            context to understand periods, scenarios, classes, source data, and
+            limitations.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Source Summary</h2>
+          <p>
+            Climate classification layers are based on Beck et al. (2023),
+            <em>
+              High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on
+              constrained CMIP6 projections </em
+            >. The app ships web-ready layers for 1901-2020 historical periods
+            and 2041-2099 CMIP6/SSP projections.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Project Code</h2>
+          <p>
+            The code is maintained at
+            <a href="https://github.com/dropbop/koppen"
+              >github.com/dropbop/koppen</a
+            >. The app is built with Vite, TypeScript, OpenLayers, and static
+            assets; it does not require a backend for normal browsing.
+          </p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

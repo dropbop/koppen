@@ -34,15 +34,17 @@ async function main(): Promise<void> {
     const initialZones = new Set(zonesList.map((zone) => zone.value));
     const preferences = loadPreferences(manifest, zonesList);
     const mobileQuery = window.matchMedia(MOBILE_SIDEBAR_QUERY);
-    mobileQuery.addEventListener('change', (event) => {
-      setState({ sidebarOpen: !event.matches });
-    });
     setState({
       ...preferences,
       period: preferences.period ?? manifest.defaultPeriod,
       visibleZones: preferences.visibleZones ?? initialZones,
       loading: true,
-      sidebarOpen: !mobileQuery.matches,
+      activePanel:
+        preferences.activePanel === undefined
+          ? mobileQuery.matches
+            ? null
+            : 'menu'
+          : preferences.activePanel,
     });
 
     const controller = mountMap(mapTarget, manifest, zones);
@@ -58,7 +60,7 @@ async function main(): Promise<void> {
 
     let loadingTimer: number | undefined;
     subscribe((state) => {
-      document.body.classList.toggle('sidebar-open', state.sidebarOpen);
+      document.body.classList.toggle('sidebar-open', state.activePanel !== null);
       schedulePersist(state);
 
       if (state.loading) {

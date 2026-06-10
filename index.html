@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Köppen-Geiger Interactive Map: Historical Climate Zones &amp; CMIP6
-      Projections
-    </title>
+    <title>Köppen-Geiger Climate Map: 1901-2099 Interactive Explorer</title>
     <meta
       name="description"
-      content="Explore an interactive global Köppen-Geiger climate classification map with historical periods from 1901–2020 and CMIP6 projections to 2099 across multiple SSP scenarios."
+      content="Explore Köppen-Geiger climate zones worldwide from 1901-2020 and CMIP6 projections for 2041-2099. Click any location, compare SSP scenarios, and view climate classes."
     />
     <meta
       name="robots"
@@ -20,35 +17,35 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://koppenmap.com/" />
-    <meta property="og:site_name" content="Köppen-Geiger Interactive Map" />
+    <meta property="og:site_name" content="Köppen-Geiger Climate Map" />
     <meta property="og:locale" content="en_US" />
     <meta
       property="og:title"
-      content="Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections"
+      content="Köppen-Geiger Climate Map: 1901-2099 Interactive Explorer"
     />
     <meta
       property="og:description"
-      content="Interactive global map of Köppen-Geiger climate zones from 1901–2099. Compare historical periods and CMIP6 SSP scenarios in the browser."
+      content="Explore global Köppen-Geiger climate zones from 1901-2020 and CMIP6 projections through 2099 with an interactive map."
     />
     <meta property="og:image" content="https://koppenmap.com/og-image.png" />
     <meta
       property="og:image:alt"
-      content="Preview of the Köppen-Geiger Interactive Map"
+      content="Preview of the interactive Köppen-Geiger climate map"
     />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections"
+      content="Köppen-Geiger Climate Map: 1901-2099 Interactive Explorer"
     />
     <meta
       name="twitter:description"
-      content="Interactive global map of Köppen-Geiger climate zones from 1901–2099 with historical periods and CMIP6 SSP projections."
+      content="Click any location, compare historical periods and SSP scenarios, and inspect Köppen-Geiger climate classes worldwide."
     />
     <meta name="twitter:image" content="https://koppenmap.com/og-image.png" />
     <meta
       name="twitter:image:alt"
-      content="Preview of the Köppen-Geiger Interactive Map"
+      content="Preview of the interactive Köppen-Geiger climate map"
     />
 
     <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any" />
@@ -117,17 +114,28 @@
             "@type": "WebSite",
             "@id": "https://koppenmap.com/#website",
             "url": "https://koppenmap.com/",
-            "name": "Köppen-Geiger Interactive Map",
-            "inLanguage": "en"
+            "name": "Köppen-Geiger Climate Map",
+            "description": "Interactive Köppen-Geiger climate map for exploring historical climate zones and future CMIP6/SSP projections.",
+            "inLanguage": "en",
+            "keywords": [
+              "Köppen-Geiger climate map",
+              "Köppen climate classification map",
+              "climate zones map",
+              "CMIP6 climate projections",
+              "SSP scenarios"
+            ]
           },
           {
             "@type": "WebPage",
             "@id": "https://koppenmap.com/#webpage",
             "url": "https://koppenmap.com/",
-            "name": "Köppen-Geiger Interactive Map: Historical Climate Zones & CMIP6 Projections",
-            "description": "Interactive global Köppen-Geiger climate classification map with historical periods from 1901–2020 and CMIP6 projections through 2099.",
+            "name": "Köppen-Geiger Climate Map: 1901-2099 Interactive Explorer",
+            "description": "Explore Köppen-Geiger climate zones worldwide from 1901-2020 and CMIP6 projections for 2041-2099. Click any location, compare SSP scenarios, and view climate classes.",
             "isPartOf": { "@id": "https://koppenmap.com/#website" },
-            "about": { "@id": "https://koppenmap.com/#app" },
+            "about": [
+              { "@id": "https://koppenmap.com/#app" },
+              { "@id": "https://koppenmap.com/#dataset" }
+            ],
             "primaryImageOfPage": {
               "@type": "ImageObject",
               "url": "https://koppenmap.com/og-image.png"
@@ -137,7 +145,7 @@
           {
             "@type": "WebApplication",
             "@id": "https://koppenmap.com/#app",
-            "name": "Köppen-Geiger Interactive Map",
+            "name": "Köppen-Geiger Climate Map",
             "url": "https://koppenmap.com/",
             "applicationCategory": "EducationalApplication",
             "operatingSystem": "Any",
@@ -149,10 +157,10 @@
               "priceCurrency": "USD"
             },
             "image": "https://koppenmap.com/og-image.png",
-            "description": "Browser-based interactive atlas for exploring global Köppen-Geiger climate zones across historical periods and CMIP6 future scenarios.",
+            "description": "Browser-based interactive climate atlas for exploring global Köppen-Geiger climate zones across historical periods and CMIP6 future scenarios.",
             "featureList": [
-              "Historical climate periods from 1901–1930 through 1991–2020",
-              "Future climate windows for 2041–2070 and 2071–2099",
+              "Historical climate periods from 1901-1930 through 1991-2020",
+              "Future climate windows for 2041-2070 and 2071-2099",
               "CMIP6 shared socioeconomic pathway scenarios",
               "Clickable map inspection by location",
               "Climate-zone group toggles and opacity controls",
@@ -163,8 +171,15 @@
           {
             "@type": "Dataset",
             "@id": "https://koppenmap.com/#dataset",
-            "name": "High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections",
-            "description": "High-resolution global Köppen-Geiger climate classification maps for historical and future periods.",
+            "name": "High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections",
+            "description": "Global Köppen-Geiger climate classification maps for historical and future periods, visualized here as web-ready Cloud Optimized GeoTIFF layers.",
+            "url": "https://www.gloh2o.org/koppen/",
+            "identifier": "https://doi.org/10.1038/s41597-023-02549-6",
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "datePublished": "2023",
+            "temporalCoverage": "1901/2099",
+            "spatialCoverage": "Global land surface",
+            "citation": "Beck, H. E. et al. High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections. Scientific Data 10, 724 (2023). doi:10.1038/s41597-023-02549-6.",
             "creator": [
               { "@type": "Person", "name": "Hylke E. Beck" },
               { "@type": "Person", "name": "Tim R. McVicar" },
@@ -177,9 +192,11 @@
               { "@type": "Person", "name": "Albert I. J. M. van Dijk" },
               { "@type": "Person", "name": "Diego G. Miralles" }
             ],
-            "datePublished": "2023",
-            "identifier": "https://doi.org/10.1038/s41597-023-02549-6",
-            "license": "https://creativecommons.org/licenses/by/4.0/"
+            "sameAs": [
+              "https://doi.org/10.1038/s41597-023-02549-6",
+              "https://doi.org/10.6084/m9.figshare.21789074",
+              "https://www.gloh2o.org/koppen/"
+            ]
           }
         ]
       }
@@ -189,11 +206,27 @@
     <div id="app">
       <noscript>
         <section>
-          <h2>Köppen-Geiger Interactive Map</h2>
+          <h1>Köppen-Geiger Climate Map</h1>
           <p>
-            This app needs JavaScript to load the interactive climate map,
-            switch periods and scenarios, and inspect climate classes by
-            location.
+            This site is an interactive Köppen-Geiger climate map for exploring
+            long-term global climate classification zones by place. The map uses
+            historical periods from 1901-1930 through 1991-2020 and future
+            CMIP6/SSP projection windows for 2041-2070 and 2071-2099.
+          </p>
+          <p>
+            JavaScript is required to load the OpenLayers map, switch periods
+            and scenarios, click locations, and inspect the active climate
+            class. You can still read about the
+            <a href="/data/">data source</a>,
+            <a href="/climate-classes/">climate classes</a>, and
+            <a href="/about/">project</a> without JavaScript.
+          </p>
+          <p>
+            Climate data is based on Beck et al. (2023),
+            <em>
+              High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on
+              constrained CMIP6 projections </em
+            >.
           </p>
         </section>
       </noscript>
@@ -208,6 +241,272 @@
         </div>
       </div>
     </div>
+
+    <main
+      id="map-guide"
+      class="seo-content seo-content-source"
+      aria-labelledby="seo-title"
+    >
+      <div class="seo-content__inner">
+        <header class="seo-content__header">
+          <div>
+            <p class="seo-content__eyebrow">
+              Interactive climate classification atlas
+            </p>
+            <h1 id="seo-title">Köppen-Geiger Climate Map</h1>
+            <p class="seo-content__lead">
+              Explore global Köppen-Geiger climate zones from 1901-2020 and
+              CMIP6 projections through 2099. Switch historical periods, compare
+              future SSP scenarios, and click any location to inspect its
+              climate class.
+            </p>
+          </div>
+        </header>
+
+        <nav aria-label="Supporting pages">
+          <a href="/data/">Data</a>
+          <a href="/climate-classes/">Climate classes</a>
+          <a href="/about/">About</a>
+        </nav>
+
+        <div id="map-guide-more" class="seo-content__grid">
+          <section class="seo-content__panel" aria-labelledby="shows-heading">
+            <h2 id="shows-heading">What This Map Shows</h2>
+            <p>
+              The map displays the Köppen-Geiger climate classification system:
+              a compact way to describe long-term climate using temperature,
+              precipitation, seasonality, and aridity. Each raster cell is
+              assigned a class such as Af, BWh, Cfa, Dfb, or ET. Those short
+              codes summarize broad climate regimes, from tropical rainforest
+              and hot desert to humid continental and tundra.
+            </p>
+          </section>
+
+          <section class="seo-content__panel" aria-labelledby="period-heading">
+            <h2 id="period-heading">Historical Periods and Future Scenarios</h2>
+            <p>
+              The shipped historical layers cover 1901-1930, 1931-1960,
+              1961-1990, and 1991-2020, with 1991-2020 used as the default view.
+              Future layers cover 2041-2070 and 2071-2099 for SSP1-1.9,
+              SSP1-2.6, SSP2-4.5, SSP3-7.0, SSP4-3.4, SSP4-6.0, and SSP5-8.5.
+              SSP labels represent shared socioeconomic pathways used in CMIP6
+              climate projections; they are scenarios, not predictions.
+            </p>
+          </section>
+
+          <section class="seo-content__panel" aria-labelledby="use-heading">
+            <h2 id="use-heading">How to Use the Explorer</h2>
+            <p>
+              Use the period selector to move between historical windows and
+              future SSP scenarios. Toggle major climate groups or individual
+              classes to focus the map, adjust opacity against the basemap, and
+              click any land location to inspect the local class code, class
+              name, description, examples, and approximate place name. The app
+              is designed for quick exploration rather than statistical analysis
+              or local-scale climate assessment.
+            </p>
+          </section>
+
+          <section class="seo-content__panel" aria-labelledby="data-heading">
+            <h2 id="data-heading">Data Source and Citation</h2>
+            <p>
+              Climate data is based on Beck et al. (2023),
+              <em>
+                High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on
+                constrained CMIP6 projections </em
+              >, published in <em>Scientific Data</em>. The source maps are
+              available through GloH2O and figshare and are described in the
+              project README as CC BY 4.0 with attribution to Beck et al.
+              Place-name lookup in popups uses OpenStreetMap Nominatim.
+            </p>
+          </section>
+
+          <section
+            class="seo-content__panel seo-content__full"
+            aria-labelledby="classes-heading"
+          >
+            <h2 id="classes-heading">Köppen-Geiger Climate Classes</h2>
+            <p>
+              Köppen-Geiger classes are organized into five major groups. The
+              first letter identifies the broad climate family; later letters
+              describe precipitation seasonality and summer or winter heat.
+            </p>
+            <div class="seo-content__groups">
+              <article class="seo-content__group">
+                <span class="seo-content__group-code">A</span>
+                <h3>Tropical</h3>
+                <p>
+                  Hot year-round climates including rainforest, monsoon, and
+                  savanna regimes.
+                </p>
+              </article>
+              <article class="seo-content__group">
+                <span class="seo-content__group-code">B</span>
+                <h3>Arid</h3>
+                <p>
+                  Desert and semi-arid climates where precipitation is limited
+                  relative to potential evaporation.
+                </p>
+              </article>
+              <article class="seo-content__group">
+                <span class="seo-content__group-code">C</span>
+                <h3>Temperate</h3>
+                <p>
+                  Mild mid-latitude climates including Mediterranean, oceanic,
+                  humid subtropical, and highland types.
+                </p>
+              </article>
+              <article class="seo-content__group">
+                <span class="seo-content__group-code">D</span>
+                <h3>Continental</h3>
+                <p>
+                  Cold-winter climates with strong seasonal temperature ranges,
+                  including humid continental and subarctic types.
+                </p>
+              </article>
+              <article class="seo-content__group">
+                <span class="seo-content__group-code">E</span>
+                <h3>Polar</h3>
+                <p>
+                  Tundra and ice-cap climates where warmth is too limited for
+                  tree growth or sustained melting seasons.
+                </p>
+              </article>
+            </div>
+
+            <table class="seo-content__class-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Group</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="seo-content__class-code">Af</span></td>
+                  <td>Tropical rainforest</td>
+                  <td>Tropical</td>
+                  <td>
+                    Hot temperatures in every month with abundant rainfall and
+                    no dry season.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="seo-content__class-code">BWh</span></td>
+                  <td>Hot desert</td>
+                  <td>Arid</td>
+                  <td>
+                    Very dry climates with mean annual temperature above 18 C.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="seo-content__class-code">Cfa</span></td>
+                  <td>Humid subtropical</td>
+                  <td>Temperate</td>
+                  <td>
+                    Hot, humid summers and mild to cool winters with
+                    precipitation year-round.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="seo-content__class-code">Dfb</span></td>
+                  <td>Warm-summer humid continental</td>
+                  <td>Continental</td>
+                  <td>
+                    Warm summers, cold winters, and precipitation in all
+                    seasons.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="seo-content__class-code">ET</span></td>
+                  <td>Tundra</td>
+                  <td>Polar</td>
+                  <td>
+                    The warmest month stays above 0 C but below 10 C, limiting
+                    tree growth.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="seo-content__meta">
+              See the <a href="/climate-classes/">climate classes page</a> for
+              all 30 shipped class descriptions from the app data.
+            </p>
+          </section>
+
+          <section class="seo-content__panel" aria-labelledby="limits-heading">
+            <h2 id="limits-heading">Limitations</h2>
+            <p>
+              Climate zones summarize long-term average conditions, not current
+              weather or a forecast. Future layers are scenario- and model-based
+              projections, not certainties. Local microclimates, elevation
+              effects, coastlines, islands, urban heat, and class boundaries may
+              differ from the gridded map. Use the map as a global explorer and
+              citation aid, not as a substitute for local climate observations
+              or engineering design data.
+            </p>
+          </section>
+
+          <section class="seo-content__panel" aria-labelledby="faq-heading">
+            <h2 id="faq-heading">FAQ</h2>
+            <div class="seo-content__faq">
+              <article>
+                <h3>What is a Köppen-Geiger climate zone?</h3>
+                <p>
+                  It is a climate class based on long-term temperature,
+                  precipitation, seasonality, and aridity thresholds.
+                </p>
+              </article>
+              <article>
+                <h3>What Köppen climate zone is my city?</h3>
+                <p>
+                  Open the map, zoom to the city, and click its location. The
+                  popup reports the active layer's climate code and name.
+                </p>
+              </article>
+              <article>
+                <h3>What do codes like Cfa, BWh, Dfb, and Af mean?</h3>
+                <p>
+                  The first letter gives the major climate group. Later letters
+                  describe dryness, seasonality, and summer or winter heat.
+                </p>
+              </article>
+              <article>
+                <h3>What do SSP scenarios mean?</h3>
+                <p>
+                  SSPs are shared socioeconomic pathways used with CMIP6 climate
+                  projections to explore possible future emissions and forcing.
+                </p>
+              </article>
+              <article>
+                <h3>Can I use or cite this map?</h3>
+                <p>
+                  Cite the underlying Beck et al. (2023) dataset for the climate
+                  maps and follow the attribution terms described by the source.
+                </p>
+              </article>
+              <article>
+                <h3>Why might this differ from another climate map?</h3>
+                <p>
+                  Maps can differ by source period, resolution, method,
+                  projection scenario, coastline handling, and classification
+                  thresholds.
+                </p>
+              </article>
+              <article>
+                <h3>Is this a weather forecast?</h3>
+                <p>
+                  No. The map shows long-term climate classes, not daily weather
+                  or short-term forecasts.
+                </p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

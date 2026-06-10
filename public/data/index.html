@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Source | Köppen-Geiger Climate Map</title>
+    <meta
+      name="description"
+      content="Data source, historical periods, CMIP6 SSP scenarios, citation, license, and limitations for the Köppen-Geiger Climate Map."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://koppenmap.com/data/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://koppenmap.com/data/" />
+    <meta property="og:title" content="Data Source | Köppen-Geiger Climate Map" />
+    <meta
+      property="og:description"
+      content="Review the source dataset, periods, SSP scenarios, citation, license, and limitations for the interactive Köppen-Geiger climate map."
+    />
+    <meta property="og:image" content="https://koppenmap.com/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://koppenmap.com/og-image.png" />
+    <link rel="stylesheet" href="../seo-static.css" />
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Site">
+        <a href="/">Map</a>
+        <a href="/climate-classes/">Climate classes</a>
+        <a href="/about/">About</a>
+      </nav>
+
+      <p class="eyebrow">Data and methods</p>
+      <h1>Data Source for the Köppen-Geiger Climate Map</h1>
+      <p class="lead">
+        This site visualizes web-ready Köppen-Geiger climate classification
+        rasters derived from the Beck et al. (2023) high-resolution global maps.
+        The interactive app uses Cloud Optimized GeoTIFF layers for fast browser
+        rendering with OpenLayers.
+      </p>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>Source Dataset</h2>
+          <p>
+            Climate maps are based on Beck, H. E. et al.,
+            <em>
+              High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on
+              constrained CMIP6 projections
+            </em>,
+            <em>Scientific Data</em> 10, 724 (2023). The README identifies
+            GloH2O as the source page and figshare as the raw TIFF archive.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Historical Coverage</h2>
+          <p>
+            The committed manifest includes historical periods for 1901-1930,
+            1931-1960, 1961-1990, and 1991-2020. The default layer is
+            1991-2020.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Future Scenarios</h2>
+          <p>
+            Future layers cover 2041-2070 and 2071-2099 for SSP1-1.9,
+            SSP1-2.6, SSP2-4.5, SSP3-7.0, SSP4-3.4, SSP4-6.0, and SSP5-8.5.
+            These are CMIP6 scenario projections, not forecasts.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>License and Attribution</h2>
+          <p>
+            The project README describes the map data as CC BY 4.0, free to
+            use, adapt, and share with attribution to Beck et al. (2023). Place
+            names in popups come from OpenStreetMap Nominatim and should be
+            attributed to OpenStreetMap contributors when reused.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Citation</h2>
+          <p>
+            Beck, H. E., T. R. McVicar, N. Vergopolan, A. Berg, N. J. Lutsko,
+            A. Dufour, Z. Zeng, X. Jiang, A. I. J. M. van Dijk, D. G.
+            Miralles. <em>High-resolution (1 km) Köppen-Geiger maps for
+            1901-2099 based on constrained CMIP6 projections.</em>
+            Scientific Data 10, 724 (2023). doi:10.1038/s41597-023-02549-6.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Limitations</h2>
+          <p>
+            Köppen-Geiger classes summarize long-term climate, not weather.
+            Future maps are scenario- and model-based projections. Local
+            microclimates, elevation, coastlines, islands, urban effects, and
+            grid-cell boundaries can make a specific place differ from the
+            displayed class.
+          </p>
+        </section>
+      </div>
+
+      <p class="meta">
+        TODO: Confirm any desired public wording about exact upstream archive
+        version labels before claiming a specific Figshare or GloH2O version
+        beyond the citation and source links already present in the repo.
+      </p>
+    </main>
+  </body>
+</html>
