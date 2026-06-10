@@ -2,6 +2,12 @@
 
 This file is intentionally short. Use `README.md` for project setup and architecture, and use `TODO.md` for the v1.0 backlog. Treat TODO items as hypotheses to validate, not automatic instructions.
 
+## Concurrent Local Sessions
+
+This project often has multiple local Codex or Claude sessions running at once. Each active editing session must use its own worktree directory and its own task branch. Do not run two active agent sessions in the same checkout, because switching branches or editing files in one session changes the working tree underneath the other session.
+
+Keep the primary checkout for one active session only, or for human use. If another agent is already working in this directory, stop and move to a separate worktree before making changes.
+
 ## Safety
 
 - Before state-changing git actions, run `git branch --show-current` and `git status -sb`.
