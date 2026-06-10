@@ -2,6 +2,8 @@
 
 This file is archived for context only. It reflects the original build plan and may be stale. Current project guidance lives in `README.md`, `TODO.md`, and `AGENTS.md`.
 
+Current generated COGs are reprojected to EPSG:3857 by `scripts/prepare-cogs.ts`; older notes below that mention serving EPSG:4326 COGs are historical, not authoritative.
+
 # Köppen-Geiger Interactive Map — Build Spec
 
 ## 1. Goal
@@ -218,7 +220,7 @@ On `map.on('singleclick', ...)`:
 3. If the value is 0 / out-of-range / not in zones.json → don't show popup (clicked on ocean or no-data area).
 4. Otherwise, set `state.popup = { lon, lat, classValue }`.
 
-Map projection note: OL renders in EPSG:3857 by default. The V3 GeoTIFFs are EPSG:4326. OL's `GeoTIFF` source handles reprojection transparently, but verify by testing that a click on a known location (e.g., Houston → should be Cfa) returns the right class.
+Map projection note: OL renders in EPSG:3857 by default. The source V3 GeoTIFFs are EPSG:4326, but current generated web COGs are reprojected to EPSG:3857 during `pnpm prepare-data`. Verify by testing that a click on a known location (e.g., Houston should be Cfa) returns the right class.
 
 ---
 

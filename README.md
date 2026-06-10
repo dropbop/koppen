@@ -6,7 +6,7 @@ A static Vite + TypeScript app for exploring the Beck et al. V3 Köppen-Geiger c
 
 - Node.js 24+
 - pnpm 10+
-- GDAL command line tools (`gdalinfo`, `gdal_translate`)
+- GDAL 3.1+ command line tools (`gdalinfo`, `gdalwarp`, `gdal_translate`)
 
 ## Setup
 
@@ -28,7 +28,7 @@ BASE_PATH=/your-repo-name/ pnpm build
 The raw archive in `koppen_geiger_tif/` is not committed because it is much larger than the generated web data. If you have the raw archive locally, `pnpm prepare-data` performs three steps:
 
 1. Prints an inventory of every source TIFF and the legend.
-2. Converts the selected 0.1 degree historical and future scenario rasters into COGs in `public/data/cogs/`.
+2. Reprojects the selected 0.1 degree historical and future scenario rasters to EPSG:3857 and writes COGs in `public/data/cogs/`.
 3. Builds `public/data/zones.json` and `public/data/manifest.json`.
 
 The manifest ships these historical periods:
@@ -65,7 +65,7 @@ Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zen
 
 ## Adding Periods Or Scenarios
 
-Period definitions live in a single file: `scripts/periods.ts`. Add an entry there with the desired `id`, `label`, `kind`, and source path under `koppen_geiger_tif/`, then run `pnpm prepare-data` to regenerate the COG and manifest.
+Period definitions live in a single file: `scripts/periods.ts`. Add an entry there with the desired `id`, `label`, `kind`, and source path under `koppen_geiger_tif/`, then run `pnpm prepare-data` to regenerate the EPSG:3857 COG and manifest.
 
 Use the existing `0p1` source files unless there is a deliberate reason to ship a heavier layer.
 
