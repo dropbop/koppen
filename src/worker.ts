@@ -14,10 +14,16 @@ type ByteRange = {
 
 const COG_PATH_PREFIX = '/data/cogs/';
 const COG_CACHE_CONTROL = 'public, max-age=86400, must-revalidate';
+const CANONICAL_HOST = 'koppenmap.com';
+const WWW_HOST = 'www.koppenmap.com';
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.hostname === WWW_HOST) {
+      return redirectToCanonicalHost(url);
+    }
 
     if (url.pathname.startsWith(COG_PATH_PREFIX)) {
       return serveCog(request, env, url);
@@ -26,6 +32,12 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
+
+function redirectToCanonicalHost(url: URL): Response {
+  url.protocol = 'https:';
+  url.hostname = CANONICAL_HOST;
+  return Response.redirect(url.toString(), 301);
+}
 
 async function serveCog(request: Request, env: Env, url: URL): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
