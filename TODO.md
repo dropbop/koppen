@@ -29,7 +29,7 @@ Before implementing any item, validate the underlying goal and decide whether th
 
 ## P0 — Features for v1.0
 
-Remaining P0 feature/deploy work is final DNS/HTTPS verification for `koppenmap.com`. The canonical domain is the apex host; `www.koppenmap.com` should redirect there through GitHub Pages.
+Remaining P0 feature/deploy work is Cloudflare production cutover and final DNS/HTTPS verification for `koppenmap.com`. The canonical domain is the apex host; `www.koppenmap.com` should redirect there through a Cloudflare redirect rule.
 
 - [x] **Pin/marker at click point.** Small accent-colored dot at the click coordinate. `src/map/click-marker.ts` exposes a Vector layer with one Point feature; geometry updates when `state.popup` changes and clears on null.
 - [x] **Desktop-collapsible sidebar.** Desktop panels can now collapse offscreen and return through an edge tab. State intentionally resets on reload; see intentional behavior above.
@@ -42,8 +42,12 @@ Remaining P0 feature/deploy work is final DNS/HTTPS verification for `koppenmap.
 - [x] **Switch `vite.config.ts` `base` to `/`** for custom-domain build (covered in Build and CI section).
 - [x] **Add `CNAME` file** to `public/` (covered in Build and CI section).
 - [x] **When custom domain lands, update hard-coded GitHub Pages deployment references** in `index.html` (canonical, `og:url`, `og:image`, `twitter:image`), `public/404.html`, `public/robots.txt`, and `public/sitemap.xml`.
-- [ ] **Verify DNS and GitHub Pages custom-domain settings.** User reports `koppenmap.com` and `www` records point to `dropbop.github.io`; confirm GitHub Pages is configured for `koppenmap.com` and redirects `www` to the apex.
-- [ ] **Verify HTTPS provisioning** completes after DNS propagates (Let's Encrypt via GitHub).
+- [ ] **Verify Cloudflare Worker preview before DNS cutover.** Confirm map rendering, period switching, zone toggles, popups, static SEO assets, cache headers, compression, custom `404.html` status behavior, and especially COG byte-range requests returning `206 Partial Content`.
+- [ ] **Verify Cloudflare custom-domain and DNS cutover.** Attach `koppenmap.com` to the Worker only after preview verification; confirm any record changes before replacing `dropbop.github.io` as the production target.
+- [ ] **Verify HTTPS provisioning** on Cloudflare after production DNS cutover.
+- [ ] **Configure `www` to apex redirect** in Cloudflare and verify path/query preservation.
+- [ ] **Disable public `workers.dev` access** after the custom domain is verified healthy so search engines only see `koppenmap.com`.
+- [ ] **Decommission GitHub Pages after Cloudflare production verification** and remove the rollback-only `public/CNAME` file.
 - [x] **Document raw data download** in README — link to the figshare DOI so contributors know where to get `koppen_geiger_tif/` from.
 
 ## P1 — Cross-browser and device testing

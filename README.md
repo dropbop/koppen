@@ -1,6 +1,6 @@
 # Köppen-Geiger Interactive Map
 
-A static Vite + TypeScript app for exploring the Beck et al. V3 Köppen-Geiger climate classification rasters. It uses OpenLayers with Cloud Optimized GeoTIFFs, no backend, and is intended for GitHub Pages.
+A static Vite + TypeScript app for exploring the Beck et al. V3 Köppen-Geiger climate classification rasters. It uses OpenLayers with Cloud Optimized GeoTIFFs, no backend, and deploys as Cloudflare Workers Static Assets.
 
 ## Requirements
 
@@ -15,9 +15,9 @@ pnpm install
 pnpm dev
 ```
 
-The beta repo includes web-ready data in `public/data/`, so GDAL is not required for normal development or GitHub Pages deployment.
+The beta repo includes web-ready data in `public/data/`, so GDAL is not required for normal development or static deployment.
 
-The Vite config defaults to `base: '/'` for the custom-domain deployment at `https://koppenmap.com/`. For a GitHub Pages project path, set `BASE_PATH` when building:
+The Vite config defaults to `base: '/'` for the custom-domain deployment at `https://koppenmap.com/`. For a non-root static deployment, set `BASE_PATH` when building:
 
 ```bash
 BASE_PATH=/your-repo-name/ pnpm build
@@ -71,7 +71,24 @@ Use the existing `0p1` source files unless there is a deliberate reason to ship 
 
 ## Deployment
 
-The included GitHub Actions workflow builds the static site and deploys it to GitHub Pages on pushes to `main`. The production custom domain is `koppenmap.com`, with `www.koppenmap.com` expected to redirect to the apex domain through GitHub Pages. If generated COGs remain small, they can be committed directly. If future data pushes the generated assets above roughly 50 MB total, switch to Git LFS or publish data as release assets.
+The included GitHub Actions workflow builds the static site and deploys it to Cloudflare Workers Static Assets on pushes to `main`. The production custom domain is `koppenmap.com`, with `www.koppenmap.com` redirected to the apex domain through Cloudflare.
+
+Deployment requires these GitHub Actions secrets:
+
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN`
+
+Use a Cloudflare API token scoped to edit Workers for the target account. Add DNS edit permissions only for workflows or operators that will manage custom-domain records or redirect rules through the API.
+
+Before switching production DNS, deploy and validate a Worker preview or `workers.dev` hostname. The critical check is that Cloud Optimized GeoTIFF byte-range requests return `206 Partial Content`, for example:
+
+```bash
+curl -sI -H "Range: bytes=0-1023" https://HOST/data/cogs/1991-2020.tif
+```
+
+After `koppenmap.com` is verified healthy on Cloudflare, disable the `workers.dev` public hostname to avoid a duplicate indexed host, then decommission GitHub Pages and remove the rollback-only `public/CNAME` file.
+
+If generated COGs remain small, they can be committed directly. If future data pushes the generated assets above roughly 50 MB total, switch to Git LFS or publish data as release assets.
 
 ## Future Work
 
