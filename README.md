@@ -71,22 +71,23 @@ Use the existing `0p1` source files unless there is a deliberate reason to ship 
 
 ## Deployment
 
-The included GitHub Actions workflow builds the static site and deploys it to Cloudflare Workers Static Assets on pushes to `main`. The production custom domain is `koppenmap.com`, with `www.koppenmap.com` redirected to the apex domain through Cloudflare.
+Cloudflare Workers Builds deploys the static site to Cloudflare Workers Static Assets from the connected GitHub repository. Pushes to `main` deploy production. The production custom domain is `koppenmap.com`; `www.koppenmap.com` is also attached to the Worker and redirects to the apex host in `src/worker.ts`.
 
-Deployment requires these GitHub Actions secrets:
-
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
-
-Use a Cloudflare API token scoped to edit Workers for the target account. Add DNS edit permissions only for workflows or operators that will manage custom-domain records or redirect rules through the API.
-
-Before switching production DNS, deploy and validate a Worker preview or `workers.dev` hostname. The critical check is that Cloud Optimized GeoTIFF byte-range requests return `206 Partial Content`, for example:
+For local validation before deployment, run:
 
 ```bash
-curl -sI -H "Range: bytes=0-1023" https://HOST/data/cogs/1991-2020.tif
+pnpm lint
+pnpm build
+pnpm exec wrangler deploy --dry-run
 ```
 
-After `koppenmap.com` is verified healthy on Cloudflare, disable the `workers.dev` public hostname to avoid a duplicate indexed host, then decommission GitHub Pages and remove the rollback-only `public/CNAME` file.
+The critical production check is that Cloud Optimized GeoTIFF byte-range requests return `206 Partial Content`, for example:
+
+```bash
+curl -sI -H "Range: bytes=0-1023" https://koppenmap.com/data/cogs/1991-2020.tif
+```
+
+Keep the public `workers.dev` hostname and preview URLs disabled to avoid duplicate indexed hosts.
 
 If generated COGs remain small, they can be committed directly. If future data pushes the generated assets above roughly 50 MB total, switch to Git LFS or publish data as release assets.
 
