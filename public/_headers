@@ -1,0 +1,13 @@
+# Fingerprinted Vite build assets can be cached aggressively.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Data files are committed but not content-hashed, so keep them revalidating.
+/data/manifest.json
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/data/zones.json
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/data/cogs/*
+  Cache-Control: public, max-age=86400, must-revalidate
