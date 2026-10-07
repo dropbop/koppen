@@ -55,7 +55,7 @@ Source: <https://www.gloh2o.org/koppen/>
 Raw TIFF archives are published with the Scientific Data article on figshare:
 <https://doi.org/10.6084/m9.figshare.21789074>
 
-Approximate place names in popups come from a bundled GeoNames extract (`public/data/places.json`, CC BY 4.0), looked up in the browser with no external requests. To regenerate it, download `cities5000.zip` (unzip it) and `admin1CodesASCII.txt` from <https://download.geonames.org/export/dump/> into `geonames/`, then run `pnpm build-places`.
+Approximate place names in popups come from a bundled GeoNames extract (`public/data/places.json`, CC BY 4.0), looked up in the browser with no external requests. To regenerate it, download `cities500.zip` and `AQ.zip` (unzip both) and `admin1CodesASCII.txt` from <https://download.geonames.org/export/dump/> into `geonames/`, then run `pnpm build-places`.
 
 License: Freely use, adapt, and share these maps under CC BY 4.0, with attribution to Beck et al. (2023).
 
