@@ -140,8 +140,20 @@ function readAdmin1(path: string): Map<string, string> {
 }
 
 const countryNames = new Intl.DisplayNames(['en'], { type: 'region' });
+// CLDR's disambiguated names read oddly at the end of a place label.
+const COUNTRY_NAME_OVERRIDES: Record<string, string> = {
+  CD: 'DR Congo',
+  CG: 'Republic of the Congo',
+  HK: 'Hong Kong',
+  MM: 'Myanmar',
+  MO: 'Macao',
+  PS: 'Palestine',
+};
 
 function countryName(code: string): string {
+  if (COUNTRY_NAME_OVERRIDES[code]) {
+    return COUNTRY_NAME_OVERRIDES[code];
+  }
   try {
     return countryNames.of(code) ?? code;
   } catch {
