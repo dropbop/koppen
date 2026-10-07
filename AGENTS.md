@@ -11,7 +11,7 @@ Keep the primary checkout for one active session only, or for human use. If anot
 ## Safety
 
 - Before state-changing git actions, run `git branch --show-current` and `git status -sb`.
-- Ask before committing, pushing, opening PRs, merging, deleting branches, or deleting files.
+- Committing, pushing, opening PRs, and merging do not need approval. Ask before deleting branches or files.
 - Do not run destructive cleanup commands unless the user explicitly requests them.
 - Do not stage local tool files, generated artifacts, or unrelated working-tree changes.
 
