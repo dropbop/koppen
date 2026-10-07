@@ -8,6 +8,7 @@
     "inventory-data": "node scripts/inventory-data.ts",
     "prepare-cogs": "node scripts/prepare-cogs.ts",
     "build-zones": "node scripts/build-zones.ts",
+    "build-places": "node scripts/build-places.ts",
     "prepare-data": "pnpm inventory-data && pnpm prepare-cogs && pnpm build-zones",
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",

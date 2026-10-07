@@ -1,6 +1,7 @@
 import 'ol/ol.css';
 import './styles.css';
 import { LOADING_DELAY_MS, MOBILE_SIDEBAR_QUERY } from '@/config';
+import { loadPlaces } from '@/data/reverse-geocode';
 import { loadAppData, zoneList } from '@/data/zones';
 import { setState, subscribe } from '@/state';
 import { mountMap, whenSourceReady } from '@/map/map';
@@ -87,6 +88,8 @@ async function main(): Promise<void> {
       await whenSourceReady(initialSource).catch(() => undefined);
     }
     setState({ loading: false });
+    // Place names are only needed for popups, so fetch them once the map is up.
+    void loadPlaces().catch(() => undefined);
   } catch (error) {
     console.error(error);
     loadingTarget.classList.remove('is-hidden');

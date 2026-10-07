@@ -5,7 +5,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['dist', 'node_modules', 'public/data', 'koppen_geiger_tif'],
+    ignores: ['dist', 'node_modules', 'public/data', 'koppen_geiger_tif', 'geonames'],
   },
   {
     rules: {

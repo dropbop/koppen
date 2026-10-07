@@ -212,7 +212,7 @@ function renderMenuContent(
       <div class="citation-body">
         <p><strong>Project code:</strong> <a href="https://github.com/dropbop/koppen/blob/main/LICENSE" target="_blank" rel="noreferrer">MIT</a> · <a href="https://github.com/dropbop/koppen" target="_blank" rel="noreferrer">github.com/dropbop/koppen</a></p>
         <p><strong>Map data:</strong> Beck et al. (2023), <a href="https://www.gloh2o.org/koppen/" target="_blank" rel="noreferrer">gloh2o.org/koppen</a>, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>. Free to use, adapt, and share with attribution to the authors.</p>
-        <p><strong>Place names:</strong> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors, <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noreferrer">ODbL</a>, via Nominatim.</p>
+        <p><strong>Place names:</strong> <a href="https://www.geonames.org/" target="_blank" rel="noreferrer">GeoNames</a>, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>.</p>
         <p class="citation-paper">Beck, H. E., T. R. McVicar, N. Vergopolan, A. Berg, N. J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A. I. J. M. van Dijk, D. G. Miralles. <em>High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections.</em> Scientific Data 10, 724 (2023). doi:10.1038/s41597-023-02549-6.</p>
       </div>
     </details>
