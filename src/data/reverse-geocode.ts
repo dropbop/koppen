@@ -14,8 +14,6 @@ export type PlaceIndex = {
 
 // Inside this distance the click is treated as "in" the town.
 const NEAR_KM = 15;
-// Past this distance a town name says more about the town than the click.
-const MAX_KM = 300;
 const EARTH_RADIUS_KM = 6371;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
@@ -110,9 +108,6 @@ function buildIndex(file: PlacesFile): PlaceIndex {
       }
 
       const km = haversineKm(lats[best], lons[best], queryLat, queryLon);
-      if (km > MAX_KM) {
-        return null;
-      }
       if (km <= NEAR_KM) {
         return labels[best];
       }
@@ -122,7 +117,7 @@ function buildIndex(file: PlacesFile): PlaceIndex {
         queryLat,
         queryLon,
       );
-      return `~${roundDistance(km)} km ${direction} of ${labels[best]}`;
+      return `~${roundDistance(km).toLocaleString('en-US')} km ${direction} of ${labels[best]}`;
     },
   };
 }
