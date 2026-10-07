@@ -1,154 +1,153 @@
-type NominatimAddress = {
-  city?: string;
-  town?: string;
-  village?: string;
-  hamlet?: string;
-  municipality?: string;
-  locality?: string;
-  county?: string;
-  state?: string;
-  country?: string;
+import { resolveAssetUrl } from '@/data/zones';
+
+// Shape written by scripts/build-places.ts.
+type PlacesFile = {
+  coordScale: number;
+  regions: [country: string, region: string, count: number][];
+  names: string;
+  coords: number[];
 };
 
-type NominatimResponse = {
-  display_name?: string;
-  address?: NominatimAddress;
+export type PlaceIndex = {
+  nearest(lon: number, lat: number): string | null;
 };
 
-const cache = new Map<string, string | null>();
-// Nominatim usage policy asks clients to stay at or below one request per second.
-const MIN_REQUEST_GAP_MS = 1100;
+// Inside this distance the click is treated as "in" the town.
+const NEAR_KM = 15;
+// Past this distance a town name says more about the town than the click.
+const MAX_KM = 300;
+const EARTH_RADIUS_KM = 6371;
+const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
-let queue: Promise<unknown> = Promise.resolve();
-let lastDispatch = 0;
-let activeController: AbortController | null = null;
+let loaded: PlaceIndex | null = null;
+let loading: Promise<PlaceIndex> | null = null;
 
-function abortError(): DOMException {
-  return new DOMException('Reverse geocode request was aborted.', 'AbortError');
+function toRadians(degrees: number): number {
+  return (degrees * Math.PI) / 180;
 }
 
-function throwIfAborted(signal: AbortSignal): void {
-  if (signal.aborted) {
-    throw abortError();
-  }
+function wrapLonDelta(delta: number): number {
+  return ((((delta + 180) % 360) + 360) % 360) - 180;
 }
 
-function waitForGap(ms: number, signal: AbortSignal): Promise<void> {
-  throwIfAborted(signal);
-  if (ms <= 0) {
-    return Promise.resolve();
-  }
-  return new Promise<void>((resolve, reject) => {
-    const onAbort = (): void => {
-      window.clearTimeout(timeout);
-      reject(abortError());
-    };
-    const timeout = window.setTimeout(() => {
-      signal.removeEventListener('abort', onAbort);
-      resolve();
-    }, ms);
-    signal.addEventListener('abort', onAbort, { once: true });
-  });
+function haversineKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(wrapLonDelta(lon2 - lon1));
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a));
 }
 
-function schedule<T>(
-  work: (signal: AbortSignal) => Promise<T>,
-  signal: AbortSignal,
-): Promise<T> {
-  const result = queue.then(async () => {
-    throwIfAborted(signal);
-    const wait = Math.max(0, lastDispatch + MIN_REQUEST_GAP_MS - Date.now());
-    if (wait > 0) {
-      await waitForGap(wait, signal);
-    }
-    lastDispatch = Date.now();
-    return work(signal);
-  });
-  queue = result.catch(() => undefined);
-  return result;
+function compassDirection(
+  fromLat: number,
+  fromLon: number,
+  toLat: number,
+  toLon: number,
+): string {
+  const phi1 = toRadians(fromLat);
+  const phi2 = toRadians(toLat);
+  const dLon = toRadians(wrapLonDelta(toLon - fromLon));
+  const y = Math.sin(dLon) * Math.cos(phi2);
+  const x =
+    Math.cos(phi1) * Math.sin(phi2) -
+    Math.sin(phi1) * Math.cos(phi2) * Math.cos(dLon);
+  const bearing = (Math.atan2(y, x) * 180) / Math.PI;
+  return COMPASS[Math.round((bearing + 360) / 45) % COMPASS.length];
 }
 
-function cancelActiveLookup(): void {
-  activeController?.abort();
-  activeController = null;
+function roundDistance(km: number): number {
+  return km < 100 ? Math.round(km / 5) * 5 : Math.round(km / 10) * 10;
 }
 
-function cacheKey(lon: number, lat: number): string {
-  return `${lat.toFixed(2)},${lon.toFixed(2)}`;
-}
+function buildIndex(file: PlacesFile): PlaceIndex {
+  const names = file.names.split('\n');
+  const count = names.length;
+  const lats = new Float64Array(count);
+  const lons = new Float64Array(count);
+  const labels = new Array<string>(count);
 
-function compactPlaceName(response: NominatimResponse): string | null {
-  const address = response.address;
-  if (address) {
-    const localName =
-      address.city ??
-      address.town ??
-      address.village ??
-      address.hamlet ??
-      address.municipality ??
-      address.locality ??
-      address.county ??
-      address.state;
-    const region =
-      address.state && address.state !== localName ? address.state : undefined;
-    const parts = [localName, region, address.country].filter(Boolean);
-    if (parts.length > 0) {
-      return parts.join(', ');
+  let lat = 0;
+  let lon = 0;
+  let i = 0;
+  for (const [country, region, regionCount] of file.regions) {
+    for (let end = i + regionCount; i < end; i += 1) {
+      lat += file.coords[i * 2];
+      lon += file.coords[i * 2 + 1];
+      lats[i] = lat / file.coordScale;
+      lons[i] = lon / file.coordScale;
+      labels[i] = [...new Set([names[i], region, country])]
+        .filter(Boolean)
+        .join(', ');
     }
   }
 
-  if (!response.display_name) {
-    return null;
-  }
+  return {
+    nearest(queryLon: number, queryLat: number): string | null {
+      // A flat-earth distance is enough to rank ~30k candidates; the winner
+      // gets a proper great-circle distance below.
+      const lonScale = Math.cos(toRadians(queryLat)) ** 2;
+      let best = -1;
+      let bestScore = Infinity;
+      for (let j = 0; j < count; j += 1) {
+        const dLat = lats[j] - queryLat;
+        const dLon = wrapLonDelta(lons[j] - queryLon);
+        const score = dLat * dLat + dLon * dLon * lonScale;
+        if (score < bestScore) {
+          bestScore = score;
+          best = j;
+        }
+      }
+      if (best < 0) {
+        return null;
+      }
 
-  return response.display_name
-    .split(',')
-    .slice(0, 3)
-    .map((part) => part.trim())
-    .join(', ');
+      const km = haversineKm(lats[best], lons[best], queryLat, queryLon);
+      if (km > MAX_KM) {
+        return null;
+      }
+      if (km <= NEAR_KM) {
+        return labels[best];
+      }
+      const direction = compassDirection(
+        lats[best],
+        lons[best],
+        queryLat,
+        queryLon,
+      );
+      return `~${roundDistance(km)} km ${direction} of ${labels[best]}`;
+    },
+  };
 }
 
-export async function reverseGeocode(
-  lon: number,
-  lat: number,
-): Promise<string | null> {
-  const key = cacheKey(lon, lat);
-  cancelActiveLookup();
-  if (cache.has(key)) {
-    return cache.get(key) ?? null;
+export function getLoadedPlaces(): PlaceIndex | null {
+  return loaded;
+}
+
+export function loadPlaces(): Promise<PlaceIndex> {
+  if (loaded) {
+    return Promise.resolve(loaded);
   }
-
-  const controller = new AbortController();
-  activeController = controller;
-
-  return schedule(async (signal) => {
-    const cached = cache.get(key);
-    if (cached !== undefined) {
-      return cached;
-    }
-    throwIfAborted(signal);
-
-    const url = new URL('https://nominatim.openstreetmap.org/reverse');
-    url.searchParams.set('format', 'jsonv2');
-    url.searchParams.set('lat', String(lat));
-    url.searchParams.set('lon', String(lon));
-    url.searchParams.set('zoom', '10');
-    url.searchParams.set('addressdetails', '1');
-    url.searchParams.set('accept-language', 'en');
-
-    const response = await fetch(url, { signal });
-    if (!response.ok) {
-      throw new Error(`Nominatim lookup failed: ${response.status}`);
-    }
-
-    const placeName = compactPlaceName(
-      (await response.json()) as NominatimResponse,
-    );
-    cache.set(key, placeName);
-    return placeName;
-  }, controller.signal).finally(() => {
-    if (activeController === controller) {
-      activeController = null;
-    }
-  });
+  if (!loading) {
+    loading = fetch(resolveAssetUrl('data/places.json'))
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load places.json: ${response.status}`);
+        }
+        loaded = buildIndex((await response.json()) as PlacesFile);
+        return loaded;
+      })
+      .finally(() => {
+        // Clear on failure too, so a later click can retry.
+        loading = null;
+      });
+  }
+  return loading;
 }

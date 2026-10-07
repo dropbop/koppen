@@ -9,5 +9,8 @@
 /data/zones.json
   Cache-Control: public, max-age=86400, must-revalidate
 
+/data/places.json
+  Cache-Control: public, max-age=86400, must-revalidate
+
 /data/cogs/*
   Cache-Control: public, max-age=86400, must-revalidate

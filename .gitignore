@@ -5,6 +5,7 @@ dist/
 *.tsbuildinfo
 
 koppen_geiger_tif/
+geonames/
 
 # Local agent/tool state
 .codex

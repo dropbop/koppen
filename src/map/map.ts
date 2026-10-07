@@ -18,7 +18,7 @@ import type { Basemap } from '@/state';
 import { getState, setState, subscribe } from '@/state';
 import type { Manifest, ZonesByValue } from '@/data/zones';
 import { resolveAssetUrl } from '@/data/zones';
-import { reverseGeocode } from '@/data/reverse-geocode';
+import { getLoadedPlaces, loadPlaces } from '@/data/reverse-geocode';
 import { createBasemapLayers } from './basemaps';
 import {
   applyZoneVisibility,
@@ -65,10 +65,6 @@ function cogForPeriod(manifest: Manifest, periodId: string): string {
   return resolveAssetUrl(period.cog);
 }
 
-function isAbortError(error: unknown): boolean {
-  return error instanceof DOMException && error.name === 'AbortError';
-}
-
 function showPopupForClick(
   event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>,
   climateLayer: WebGLTileLayer,
@@ -80,40 +76,45 @@ function showPopupForClick(
     return;
   }
 
+  const places = getLoadedPlaces();
+  if (places) {
+    setState({
+      popup: {
+        ...result,
+        placeName: places.nearest(result.lon, result.lat) ?? undefined,
+        placeStatus: 'ready',
+      },
+    });
+    return;
+  }
+
+  // Only reached if the click beats the background place-data load.
   setState({ popup: { ...result, placeStatus: 'loading' } });
-  void reverseGeocode(result.lon, result.lat)
-    .then((placeName) => {
-      const currentPopup = getState().popup;
-      if (
-        !currentPopup ||
-        currentPopup.lon !== result.lon ||
-        currentPopup.lat !== result.lat ||
-        currentPopup.classValue !== result.classValue
-      ) {
-        return;
+  const isSamePopup = (): boolean => {
+    const currentPopup = getState().popup;
+    return (
+      !!currentPopup &&
+      currentPopup.lon === result.lon &&
+      currentPopup.lat === result.lat &&
+      currentPopup.classValue === result.classValue
+    );
+  };
+  void loadPlaces()
+    .then((index) => {
+      if (isSamePopup()) {
+        setState({
+          popup: {
+            ...result,
+            placeName: index.nearest(result.lon, result.lat) ?? undefined,
+            placeStatus: 'ready',
+          },
+        });
       }
-      setState({
-        popup: {
-          ...currentPopup,
-          placeName: placeName ?? undefined,
-          placeStatus: 'ready',
-        },
-      });
     })
-    .catch((error: unknown) => {
-      if (isAbortError(error)) {
-        return;
+    .catch(() => {
+      if (isSamePopup()) {
+        setState({ popup: { ...result, placeStatus: 'error' } });
       }
-      const currentPopup = getState().popup;
-      if (
-        !currentPopup ||
-        currentPopup.lon !== result.lon ||
-        currentPopup.lat !== result.lat ||
-        currentPopup.classValue !== result.classValue
-      ) {
-        return;
-      }
-      setState({ popup: { ...currentPopup, placeStatus: 'error' } });
     });
 }
 
@@ -153,7 +154,12 @@ export function mountMap(
   const map = new Map({
     target,
     pixelRatio: Math.min(window.devicePixelRatio, MAX_MAP_PIXEL_RATIO),
-    layers: [basemaps.plain, basemaps.satellite, climateLayer, clickMarkerLayer],
+    layers: [
+      basemaps.plain,
+      basemaps.satellite,
+      climateLayer,
+      clickMarkerLayer,
+    ],
     controls: defaultControls(),
     interactions,
     view: new View({
