@@ -1,5 +1,6 @@
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
+import { CARTO_BASEMAPS_KEY } from '@/config';
 
 export type BasemapLayers = {
   plain: TileLayer<XYZ>;
@@ -9,7 +10,7 @@ export type BasemapLayers = {
 export function createBasemapLayers(): BasemapLayers {
   const plain = new TileLayer({
     source: new XYZ({
-      url: 'https://{a-d}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      url: `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${CARTO_BASEMAPS_KEY}`,
       attributions: '&copy; OpenStreetMap contributors &copy; CARTO',
       crossOrigin: 'anonymous',
       maxZoom: 20,
